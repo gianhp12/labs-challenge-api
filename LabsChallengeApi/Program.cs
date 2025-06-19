@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+Serilog.Debugging.SelfLog.Enable(msg => Console.Error.WriteLine("SERILOG SELFLOG: " + msg));
 SerilogLoggerFactory.ConfigureSerilog(builder.Configuration, builder.Environment);
 builder.Host.UseSerilog();
 builder.Services.AddControlServices();
