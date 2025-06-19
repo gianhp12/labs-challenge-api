@@ -1,4 +1,4 @@
-namespace LabsChallengeApi.Shared.Infrastructure.Database.Factories;
+namespace LabsChallengeApi.Shared.Infrastructure.Database;
 
 public interface ISqlConnectionFactory
 {

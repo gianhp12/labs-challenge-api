@@ -11,17 +11,19 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+    <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0" />
+    <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
+    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="10.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application/" />
-    <Folder Include="Domain/" />
-    <Folder Include="Infrastructure/" />
-    <Folder Include="Shared/Application/" />
+    <Folder Include="Modules/Authentication/Application/" />
+    <Folder Include="Modules/Authentication/Domain/" />
+    <Folder Include="Modules/Authentication/Infrastructure/DI/" />
     <Folder Include="Shared/Domain/" />
-    <Folder Include="Shared/Infrastructure/Http/" />
-    <Folder Include="Shared/Infrastructure/Logger/" />
   </ItemGroup>
 
 </Project>
