@@ -1,8 +1,8 @@
 USE [master]
 GO
-CREATE DATABASE [LabsChallengeDB]
+CREATE DATABASE [LabsChallengeDb]
 GO
-USE[LabsChallengeD]
+USE[LabsChallengeDb]
 GO
 CREATE SCHEMA [Access_Control]
 GO

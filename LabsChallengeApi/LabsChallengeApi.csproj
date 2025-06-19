@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.11" />
@@ -23,9 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Src/Modules/Authentication/Application/" />
-    <Folder Include="Src/Modules/Authentication/Domain/" />
-    <Folder Include="Src/Modules/Authentication/Infrastructure/DI/" />
+    <Folder Include="Src/Modules/AuthModule/" />
+    <Folder Include="Src/Modules/UserModule/Application/Dtos/Output/" />
     <Folder Include="Src/Shared/Domain/" />
   </ItemGroup>
 

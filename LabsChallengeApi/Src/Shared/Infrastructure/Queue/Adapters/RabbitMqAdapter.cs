@@ -15,7 +15,7 @@ public class RabbitMqAdapter : IQueueService
 
     public RabbitMqAdapter(IConfiguration configuration)
     {
-        QueueSettings = configuration.GetEnvironmentSettings("QueueService");
+        QueueSettings = configuration.GetSettingsSection("QueueService");
         var props = QueueSettings.GetChildren();
         if (!props.Any(x => x.Key == "Host")) throw new Exception($"Key (QueueService:host) is not set in the configuration.");
         if (!props.Any(x => x.Key == "Port")) throw new Exception($"Key (QueueService:Port) is not set in the configuration.");

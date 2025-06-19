@@ -2,29 +2,19 @@ namespace LabsChallengeApi.Src.Shared.Infrastructure.Extensions;
 
 public static class Configuration
 {
-    public static string GetConnectionStringByEnvironment(this IConfiguration configuration, string key)
+    public static string GetRequiredConnectionString(this IConfiguration configuration, string key)
     {
-        var environment = configuration.GetEnvironmentString();
-        if (string.IsNullOrEmpty(environment)) throw new Exception($"Environment variable {environment} is not set.");
-        var connectionString = configuration.GetConnectionString($"{key}_{environment}");
-        if (string.IsNullOrEmpty(connectionString)) throw new Exception($"Connection string {key}_{environment} is not set in the configuration.");
-        return connectionString;
+        var connectionString = configuration.GetConnectionString(key);
+        if (string.IsNullOrEmpty(connectionString))
+            throw new InvalidOperationException($"Connection string '{key}' is not set in the configuration.");
+        return connectionString!;
     }
 
-    public static IConfigurationSection GetEnvironmentSettings(this IConfiguration configuration, string section)
+    public static IConfigurationSection GetSettingsSection(this IConfiguration configuration, string section)
     {
-        var environment = configuration.GetEnvironmentString();
-        var settings = configuration.GetSection($"{section}:{environment}");
+        var settings = configuration.GetSection(section);
         if (!settings.Exists())
-            throw new Exception("Error: environment not detected");
+            throw new InvalidOperationException($"Section '{section}' not found in configuration.");
         return settings;
-    }
-
-    public static string GetEnvironmentString(this IConfiguration configuration)
-    {
-        var environmentKey = configuration.GetValue<string>("EnvironmentKey")!;
-        var environment = Environment.GetEnvironmentVariable(environmentKey);
-        if (string.IsNullOrEmpty(environment)) throw new Exception("Error: environment not detected");
-        return environment;
     }
 }

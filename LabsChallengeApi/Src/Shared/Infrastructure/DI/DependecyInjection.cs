@@ -8,7 +8,7 @@ namespace LabsChallengeApi.Src.Shared.Infrastructure.DI;
 
 public static class DependecyInjection
 {
-    public static IServiceCollection AddControlServices(this IServiceCollection services)
+    public static IServiceCollection AddSharedModuleServices(this IServiceCollection services)
     {
         services.AddApiVersioning(options =>
         {
