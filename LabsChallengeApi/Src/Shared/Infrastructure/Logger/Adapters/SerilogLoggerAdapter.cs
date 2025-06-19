@@ -1,6 +1,6 @@
 using Serilog;
 
-namespace LabsChallengeApi.Shared.Infrastructure.Logger.Adapters;
+namespace LabsChallengeApi.Src.Shared.Infrastructure.Logger.Adapters;
 
 public class SerilogLoggerAdapter : ILoggerService
 {

@@ -1,7 +1,8 @@
 using System.Diagnostics;
-using LabsChallengeApi.Shared.Infrastructure.Logger;
+using LabsChallengeApi.Src.Shared.Infrastructure.Logger;
 
-namespace LabsChallengeApi.Shared.Application.Middlewares;
+
+namespace LabsChallengeApi.Src.Shared.Application.Middlewares;
 
 public class RequestLoggingMiddleware : IMiddleware
 {

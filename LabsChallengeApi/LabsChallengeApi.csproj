@@ -20,10 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Modules/Authentication/Application/" />
-    <Folder Include="Modules/Authentication/Domain/" />
-    <Folder Include="Modules/Authentication/Infrastructure/DI/" />
-    <Folder Include="Shared/Domain/" />
+    <Folder Include="Src/Modules/Authentication/Application/" />
+    <Folder Include="Src/Modules/Authentication/Domain/" />
+    <Folder Include="Src/Modules/Authentication/Infrastructure/DI/" />
+    <Folder Include="Src/Shared/Domain/" />
   </ItemGroup>
 
 </Project>

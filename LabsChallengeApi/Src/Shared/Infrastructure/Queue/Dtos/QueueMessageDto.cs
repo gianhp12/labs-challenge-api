@@ -1,6 +1,6 @@
 using RabbitMQ.Client;
 
-namespace LabsChallengeApi.Shared.Infrastructure.Queue.Dtos;
+namespace LabsChallengeApi.Src.Shared.Infrastructure.Queue.Dtos;
 
 public class QueueMessageDto
 {

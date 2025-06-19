@@ -1,8 +1,8 @@
-using LabsChallengeApi.Shared.Infrastructure.Queue.Dtos;
+using LabsChallengeApi.Src.Shared.Infrastructure.Queue.Dtos;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace LabsChallengeApi.Shared.Infrastructure.Queue;
+namespace LabsChallengeApi.Src.Shared.Infrastructure.Queue;
 
 public interface IQueueService
 {

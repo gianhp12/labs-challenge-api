@@ -1,6 +1,6 @@
 using Microsoft.Data.SqlClient;
 
-namespace LabsChallengeApi.Shared.Infrastructure.Database.Dtos;
+namespace LabsChallengeApi.Src.Shared.Infrastructure.Database.Dtos;
 
 public class MssqlQueryDto : ISqlQuery
 {

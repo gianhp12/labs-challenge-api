@@ -1,7 +1,7 @@
-using LabsChallengeApi.Shared.Infrastructure.Database.Dtos;
+using LabsChallengeApi.Src.Shared.Infrastructure.Database.Dtos;
 using Microsoft.Data.SqlClient;
 
-namespace LabsChallengeApi.Shared.Infrastructure.Database.Adapters;
+namespace LabsChallengeApi.Src.Shared.Infrastructure.Database.Adapters;
 
 public class SqlServerAdapter : ISqlConnection
 {

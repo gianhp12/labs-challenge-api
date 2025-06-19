@@ -1,4 +1,4 @@
-namespace LabsChallengeApi.Shared.Infrastructure.Logger;
+namespace LabsChallengeApi.Src.Shared.Infrastructure.Logger;
 
 public interface ILoggerService
 {

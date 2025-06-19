@@ -1,6 +1,6 @@
-using LabsChallengeApi.Shared.Infrastructure.Database.Adapters;
+using LabsChallengeApi.Src.Shared.Infrastructure.Database.Adapters;
 
-namespace LabsChallengeApi.Shared.Infrastructure.Database.Factories;
+namespace LabsChallengeApi.Src.Shared.Infrastructure.Database.Factories;
 
 public class SqlServerFactory : ISqlConnectionFactory
 {

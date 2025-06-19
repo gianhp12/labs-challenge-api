@@ -1,11 +1,11 @@
 using System.Text;
-using LabsChallengeApi.Shared.Infrastructure.Extensions;
-using LabsChallengeApi.Shared.Infrastructure.Queue.Dtos;
+using LabsChallengeApi.Src.Shared.Infrastructure.Extensions;
+using LabsChallengeApi.Src.Shared.Infrastructure.Queue.Dtos;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace LabsChallengeApi.Shared.Infrastructure.Queue.Adapters;
+namespace LabsChallengeApi.Src.Shared.Infrastructure.Queue.Adapters;
 
 public class RabbitMqAdapter : IQueueService
 {

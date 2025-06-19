@@ -1,10 +1,10 @@
-using LabsChallengeApi.Shared.Application.Middlewares;
-using LabsChallengeApi.Shared.Infrastructure.Database;
-using LabsChallengeApi.Shared.Infrastructure.Database.Factories;
-using LabsChallengeApi.Shared.Infrastructure.Logger;
-using LabsChallengeApi.Shared.Infrastructure.Logger.Adapters;
+using LabsChallengeApi.Src.Shared.Application.Middlewares;
+using LabsChallengeApi.Src.Shared.Infrastructure.Database;
+using LabsChallengeApi.Src.Shared.Infrastructure.Database.Factories;
+using LabsChallengeApi.Src.Shared.Infrastructure.Logger;
+using LabsChallengeApi.Src.Shared.Infrastructure.Logger.Adapters;
 
-namespace LabsChallengeApi.Shared.Infrastructure.DI;
+namespace LabsChallengeApi.Src.Shared.Infrastructure.DI;
 
 public static class DependecyInjection
 {

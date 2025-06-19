@@ -1,4 +1,4 @@
-namespace LabsChallengeApi.Shared.Infrastructure.Extensions;
+namespace LabsChallengeApi.Src.Shared.Infrastructure.Extensions;
 
 public static class Configuration
 {

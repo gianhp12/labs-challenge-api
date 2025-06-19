@@ -1,6 +1,6 @@
-using LabsChallengeApi.Shared.Application.Middlewares;
-using LabsChallengeApi.Shared.Infrastructure.DI;
 using LabsChallengeApi.Shared.Infrastructure.Logger.Factories;
+using LabsChallengeApi.Src.Shared.Application.Middlewares;
+using LabsChallengeApi.Src.Shared.Infrastructure.DI;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
