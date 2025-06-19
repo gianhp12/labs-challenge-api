@@ -1,6 +1,8 @@
 using LabsChallengeApi.Shared.Infrastructure.Logger.Factories;
+using LabsChallengeApi.Src.Shared.Application.Configuration;
 using LabsChallengeApi.Src.Shared.Application.Middlewares;
 using LabsChallengeApi.Src.Shared.Infrastructure.DI;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,14 +16,10 @@ builder.Host.UseSerilog();
 builder.Services.AddControlServices();
 
 var app = builder.Build();
-
+var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+var env = app.Environment;
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.MapHealthChecks("/health");
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwaggerConfiguration(provider, env);
 app.UseHttpsRedirection();
 app.Run();

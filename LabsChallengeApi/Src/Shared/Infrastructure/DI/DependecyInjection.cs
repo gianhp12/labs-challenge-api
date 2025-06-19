@@ -10,6 +10,17 @@ public static class DependecyInjection
 {
     public static IServiceCollection AddControlServices(this IServiceCollection services)
     {
+        services.AddApiVersioning(options =>
+        {
+            options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.ReportApiVersions = true;
+        });
+        services.AddVersionedApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'VVV";
+            options.SubstituteApiVersionInUrl = true;
+        });
         services.AddSingleton<ISqlConnectionFactory, SqlServerFactory>();
         services.AddSingleton<ILoggerService, SerilogLoggerAdapter>();
         services.AddTransient<RequestLoggingMiddleware>();
