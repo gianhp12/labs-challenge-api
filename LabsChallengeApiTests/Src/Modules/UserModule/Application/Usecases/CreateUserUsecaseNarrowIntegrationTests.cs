@@ -1,5 +1,6 @@
 using LabsChallengeApi.Src.Modules.UserModule.Application.Dtos.Input;
 using LabsChallengeApi.Src.Modules.UserModule.Application.Usecases;
+using LabsChallengeApi.Src.Modules.UserModule.Domain.DAOs;
 using LabsChallengeApi.Src.Modules.UserModule.Domain.Entities;
 using LabsChallengeApi.Src.Modules.UserModule.Domain.Repositories;
 using LabsChallengeApi.Src.Shared.Infrastructure.Hasher;
@@ -11,6 +12,7 @@ namespace LabsChallengeApiTests.Src.Modules.UserModule.Application.Usecases;
 public class CreateUserUsecaseNarrowIntegrationTests
 {
     private Mock<IUserRepository> _mockUserRepository = null!;
+    private Mock<IUserDAO> _mockUserDAO = null!;
     private Mock<IPasswordHasher> _mockPasswordHasher = null!;
     private CreateUserUsecase _createUserUsecase = null!;
 
@@ -18,8 +20,9 @@ public class CreateUserUsecaseNarrowIntegrationTests
     public void Setup()
     {
         _mockUserRepository = new Mock<IUserRepository>();
+        _mockUserDAO = new Mock<IUserDAO>();
         _mockPasswordHasher = new Mock<IPasswordHasher>();
-        _createUserUsecase = new CreateUserUsecase(_mockUserRepository.Object, _mockPasswordHasher.Object);
+        _createUserUsecase = new CreateUserUsecase(_mockUserRepository.Object, _mockUserDAO.Object, _mockPasswordHasher.Object);
     }
 
     public async Task ExecuteAsync_ShouldCallRepositoryAndPasswordHasher_WhenInputDataIsValid()
@@ -31,11 +34,29 @@ public class CreateUserUsecaseNarrowIntegrationTests
             Email = "john.doe@hotmail.com",
             Password = "Teste1234"
         };
+        _mockUserDAO.Setup(dao => dao.ExistsByEmailAsync(It.IsAny<string>())).ReturnsAsync(false);
         //WHEN
         await _createUserUsecase.ExecuteAsync(inputDto);
         //THEN
         _mockPasswordHasher.Verify(hasher => hasher.Hash(It.IsAny<string>()), Times.Once);
         _mockUserRepository.Verify(repository => repository.CreateAsync(It.IsAny<User>()), Times.Once);
+    }
+
+    public async Task ExecuteAsync_ShouldNotCallRepositoryAndHaser_WhenEmailAlreadyExists()
+    {
+        //GIVEN
+        var inputDto = new CreateUserInputDto
+        {
+            Username = "John Doe",
+            Email = "john.doe@hotmail.com",
+            Password = "Teste1234"
+        };
+        _mockUserDAO.Setup(dao => dao.ExistsByEmailAsync(It.IsAny<string>())).ReturnsAsync(true);
+        //WHEN
+        await _createUserUsecase.ExecuteAsync(inputDto);
+        //THEN
+        _mockUserRepository.Verify(repository => repository.CreateAsync(It.IsAny<User>()), Times.Never);
+        _mockPasswordHasher.Verify(hasher => hasher.Hash(It.IsAny<string>()), Times.Never);
     }
 
     public async Task ExecuteAsync_ShouldNotCallRepository_WhenThrowValidationException()
@@ -47,6 +68,7 @@ public class CreateUserUsecaseNarrowIntegrationTests
             Email = "john.doe@hotmail.com",
             Password = ""
         };
+        _mockUserDAO.Setup(dao => dao.ExistsByEmailAsync(It.IsAny<string>())).ReturnsAsync(false);
         //WHEN
         await _createUserUsecase.ExecuteAsync(inputDto);
         //THEN
@@ -62,6 +84,7 @@ public class CreateUserUsecaseNarrowIntegrationTests
             Email = "john.doe@hotmail.com",
             Password = ""
         };
+        _mockUserDAO.Setup(dao => dao.ExistsByEmailAsync(It.IsAny<string>())).ReturnsAsync(false);
         //WHEN
         await _createUserUsecase.ExecuteAsync(inputDto);
         //THEN
