@@ -478,3 +478,6 @@ $RECYCLE.BIN/
 
 # Logs Serilog
 logs-buffer*
+
+#Env
+appsettings.Production.json
