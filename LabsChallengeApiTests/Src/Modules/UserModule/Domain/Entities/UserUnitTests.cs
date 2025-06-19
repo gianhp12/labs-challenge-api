@@ -16,7 +16,7 @@ public class UserUnitTests
         //WHEN
         var result = User.Create(name, email, password);
         //THEN
-        Assert.AreEqual(name, result.Name);
+        Assert.AreEqual(name, result.Name.Value);
         Assert.AreEqual(email, result.Email.Value);
         Assert.AreEqual(password, result.Password!.Value);
         Assert.IsFalse(result.IsEmailConfirmed);
@@ -37,7 +37,7 @@ public class UserUnitTests
         var result = User.Restore(id, name, email, passwordHash, isEmailConfirmed);
         //THEN
         Assert.AreEqual(id, result.Id);
-        Assert.AreEqual(name, result.Name);
+        Assert.AreEqual(name, result.Name.Value);
         Assert.AreEqual(email, result.Email.Value);
         Assert.AreEqual(passwordHash, result.PasswordHash);
         Assert.IsTrue(result.IsEmailConfirmed);

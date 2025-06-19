@@ -55,14 +55,14 @@ public class UserRepositoryBroadIntegrationTests
         {
             Query = "SELECT Name, Email FROM [Access_Control].[Users] WHERE Name = @Name AND Email = @Email",
             Parameters = [
-                new("@Name", user.Name),
+                new("@Name", user.Name.Value),
                 new("@Email", user.Email.Value)
             ]
         };
         var result = await _connection.ExecuteQueryAsync(queryCheck);
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);
-        Assert.AreEqual(user.Name, result[0]["Name"]);
+        Assert.AreEqual(user.Name.Value, result[0]["Name"]);
         Assert.AreEqual(user.Email.Value, result[0]["Email"]);
     }
 }

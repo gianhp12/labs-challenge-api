@@ -24,7 +24,7 @@ public class UserRepository : IUserRepository
             Query = @"INSERT INTO [Access_Control].[Users] (Name, Email, PasswordHash, IsEmailConfirmed, CreatedAt, UpdatedAt)
                     VALUES (@Name, @Email, @PasswordHash, @IsEmailConfirmed, @CreatedAt, @UpdatedAt)",
             Parameters = [
-                new ("@Name", user.Name),
+                new ("@Name", user.Name.Value),
                 new ("@Email",user.Email.Value),
                 new ("@PasswordHash", user.PasswordHash),
                 new ("@IsEmailConfirmed", user.IsEmailConfirmed),
