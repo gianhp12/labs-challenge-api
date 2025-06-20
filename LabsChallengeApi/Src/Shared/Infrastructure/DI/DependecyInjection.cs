@@ -1,13 +1,15 @@
 using LabsChallengeApi.Src.Shared.Application.Middlewares;
 using LabsChallengeApi.Src.Shared.Infrastructure.Database;
 using LabsChallengeApi.Src.Shared.Infrastructure.Database.Factories;
-using LabsChallengeApi.Src.Shared.Infrastructure.Hasher;
-using LabsChallengeApi.Src.Shared.Infrastructure.Hasher.Adapters;
+using LabsChallengeApi.Src.Shared.Infrastructure.Security.Hasher;
+using LabsChallengeApi.Src.Shared.Infrastructure.Security.Hasher.Adapters;
 using LabsChallengeApi.Src.Shared.Infrastructure.Logger;
 using LabsChallengeApi.Src.Shared.Infrastructure.Logger.Adapters;
 using LabsChallengeApi.Src.Shared.Infrastructure.Queue;
 using LabsChallengeApi.Src.Shared.Infrastructure.Queue.Adapters;
 using LabsChallengeApi.Src.Shared.Infrastructure.Queue.Init;
+using LabsChallengeApi.Src.Shared.Infrastructure.Security.Token;
+using LabsChallengeApi.Src.Shared.Infrastructure.Security.Token.Adapters;
 
 namespace LabsChallengeApi.Src.Shared.Infrastructure.DI;
 
@@ -31,6 +33,7 @@ public static class DependecyInjection
         services.AddSingleton<ISqlConnectionFactory, SqlServerFactory>();
         services.AddSingleton<ILoggerService, SerilogLoggerAdapter>();
         services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
+        services.AddSingleton<ITokenService, JwtTokenService>();
         services.AddTransient<RequestLoggingMiddleware>();
         return services;
     }

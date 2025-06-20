@@ -1,11 +1,11 @@
-using LabsChallengeApi.Src.Modules.UserModule.Domain.Entities;
-using LabsChallengeApi.Src.Modules.UserModule.Infrastructure.Repositories;
+using LabsChallengeApi.Src.Modules.AuthModule.Domain.Entities;
+using LabsChallengeApi.Src.Modules.AuthModule.Infrastructure.Repositories;
 using LabsChallengeApi.Src.Shared.Infrastructure.Database;
 using LabsChallengeApi.Src.Shared.Infrastructure.Database.Dtos;
 using LabsChallengeApi.Src.Shared.Infrastructure.Database.Factories;
 using LabsChallengeApi.Src.Shared.Infrastructure.Extensions;
-using LabsChallengeApi.Src.Shared.Infrastructure.Hasher;
-using LabsChallengeApi.Src.Shared.Infrastructure.Hasher.Adapters;
+using LabsChallengeApi.Src.Shared.Infrastructure.Security.Hasher;
+using LabsChallengeApi.Src.Shared.Infrastructure.Security.Hasher.Adapters;
 using Microsoft.Extensions.Configuration;
 
 namespace LabsChallengeApiTests.Src.Modules.UserModule.Infrastructure.Repositories;
@@ -49,6 +49,7 @@ public class UserRepositoryBroadIntegrationTests
         );
         var encryptPassword = _passwordHasher.Hash(user.Password!.Value);
         user.SetPasswordHash(encryptPassword);
+        //WHEN
         await _userRepository.CreateAsync(user);
         //THEN
         var queryCheck = new MssqlQueryDto()
@@ -64,5 +65,30 @@ public class UserRepositoryBroadIntegrationTests
         Assert.AreEqual(1, result.Count);
         Assert.AreEqual(user.Name.Value, result[0]["Name"]);
         Assert.AreEqual(user.Email.Value, result[0]["Email"]);
+    }
+
+    [TestMethod]
+    public async Task GetByIdAsync_ShouldReturnUser_WhenUserExistsInDatabase()
+    {
+        //GIVEN
+        var queryInit = new MssqlQueryDto
+        {
+            Query = @"TRUNCATE TABLE [Access_Control].[Users]"
+        };
+        await _connection.ExecuteNonQueryAsync(queryInit);
+        var user = User.Create(
+            name: "John Doe",
+            email: "john.doe@gmail.com",
+            password: "J@hn1234"
+        );
+        var encryptPassword = _passwordHasher.Hash(user.Password!.Value);
+        user.SetPasswordHash(encryptPassword);
+        await _userRepository.CreateAsync(user);
+        //WHEN
+        var result = await _userRepository.GetByEmailAsync(user.Email.Value);
+        //THEN
+        Assert.IsNotNull(result);
+        Assert.AreEqual(result.Name.Value, user.Name.Value);
+        Assert.AreEqual(result.Email.Value, user.Email.Value);
     }
 }

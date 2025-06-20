@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.OpenApi.Models;
 
 namespace LabsChallengeApi.Src.Shared.Application.Configuration;
 
@@ -12,18 +13,35 @@ public static class SwaggerConfiguration
                                    .GetRequiredService<IApiVersionDescriptionProvider>();
             foreach (var description in provider.ApiVersionDescriptions)
             {
-                options.SwaggerDoc(description.GroupName, new Microsoft.OpenApi.Models.OpenApiInfo
+                options.SwaggerDoc(description.GroupName, new OpenApiInfo
                 {
                     Title = $"Labs Challenge API {description.ApiVersion}",
                     Version = description.GroupName,
-                    Description = "Documentação da API",
-                    Contact = new Microsoft.OpenApi.Models.OpenApiContact
-                    {
-                        Name = "Gian Henrique Pereira",
-                        Email = "gian_htc@hotmail.com",
-                    }
                 });
             }
+            var jwtSecurityScheme = new OpenApiSecurityScheme
+            {
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Description = "Informe o token JWT no campo abaixo. Exemplo: **Bearer seu_token_aqui**",
+
+                Reference = new OpenApiReference
+                {
+                    Id = "Bearer",
+                    Type = ReferenceType.SecurityScheme
+                }
+            };
+            options.AddSecurityDefinition("Bearer", jwtSecurityScheme);
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    jwtSecurityScheme,
+                    Array.Empty<string>()
+                }
+            });
         });
         return services;
     }
@@ -43,11 +61,13 @@ public static class SwaggerConfiguration
                     options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
                         description.GroupName.ToUpperInvariant());
                 }
+
                 options.RoutePrefix = string.Empty;
             });
         }
         return app;
     }
 }
+
 
 

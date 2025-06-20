@@ -1,4 +1,4 @@
-using LabsChallengeApi.Src.Modules.UserModule.Domain.VO;
+using LabsChallengeApi.Src.Modules.AuthModule.Domain.VO;
 using LabsChallengeApi.Src.Shared.Application.Exceptions;
 
 namespace LabsChallengeApiTests.Src.Modules.UserModule.Domain.VO;
