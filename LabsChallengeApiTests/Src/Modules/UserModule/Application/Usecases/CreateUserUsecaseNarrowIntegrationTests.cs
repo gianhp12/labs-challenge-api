@@ -4,6 +4,8 @@ using LabsChallengeApi.Src.Modules.UserModule.Domain.DAOs;
 using LabsChallengeApi.Src.Modules.UserModule.Domain.Entities;
 using LabsChallengeApi.Src.Modules.UserModule.Domain.Repositories;
 using LabsChallengeApi.Src.Shared.Infrastructure.Hasher;
+using LabsChallengeApi.Src.Shared.Infrastructure.Queue;
+using LabsChallengeApi.Src.Shared.Infrastructure.Queue.Dtos;
 using Moq;
 
 namespace LabsChallengeApiTests.Src.Modules.UserModule.Application.Usecases;
@@ -14,6 +16,7 @@ public class CreateUserUsecaseNarrowIntegrationTests
     private Mock<IUserRepository> _mockUserRepository = null!;
     private Mock<IUserDAO> _mockUserDAO = null!;
     private Mock<IPasswordHasher> _mockPasswordHasher = null!;
+    private Mock<IQueueService> _mockQueueService = null!;
     private CreateUserUsecase _createUserUsecase = null!;
 
     [TestInitialize]
@@ -22,10 +25,11 @@ public class CreateUserUsecaseNarrowIntegrationTests
         _mockUserRepository = new Mock<IUserRepository>();
         _mockUserDAO = new Mock<IUserDAO>();
         _mockPasswordHasher = new Mock<IPasswordHasher>();
-        _createUserUsecase = new CreateUserUsecase(_mockUserRepository.Object, _mockUserDAO.Object, _mockPasswordHasher.Object);
+        _mockQueueService = new Mock<IQueueService>();
+        _createUserUsecase = new CreateUserUsecase(_mockUserRepository.Object, _mockUserDAO.Object, _mockPasswordHasher.Object, _mockQueueService.Object);
     }
 
-    public async Task ExecuteAsync_ShouldCallRepositoryAndPasswordHasher_WhenInputDataIsValid()
+    public async Task ExecuteAsync_ShouldCallRepositoryAndPasswordHasherAndQueueService_WhenInputDataIsValid()
     {
         //GIVEN
         var inputDto = new CreateUserInputDto
@@ -40,9 +44,10 @@ public class CreateUserUsecaseNarrowIntegrationTests
         //THEN
         _mockPasswordHasher.Verify(hasher => hasher.Hash(It.IsAny<string>()), Times.Once);
         _mockUserRepository.Verify(repository => repository.CreateAsync(It.IsAny<User>()), Times.Once);
+        _mockQueueService.Verify(queue => queue.SendMessage(It.IsAny<QueueMessageDto>()),Times.Once);
     }
 
-    public async Task ExecuteAsync_ShouldNotCallRepositoryAndHaser_WhenEmailAlreadyExists()
+    public async Task ExecuteAsync_ShouldNotCallRepositoryAndHaserAndQueueService_WhenEmailAlreadyExists()
     {
         //GIVEN
         var inputDto = new CreateUserInputDto
@@ -57,9 +62,10 @@ public class CreateUserUsecaseNarrowIntegrationTests
         //THEN
         _mockUserRepository.Verify(repository => repository.CreateAsync(It.IsAny<User>()), Times.Never);
         _mockPasswordHasher.Verify(hasher => hasher.Hash(It.IsAny<string>()), Times.Never);
+        _mockQueueService.Verify(queue => queue.SendMessage(It.IsAny<QueueMessageDto>()),Times.Never);
     }
 
-    public async Task ExecuteAsync_ShouldNotCallRepository_WhenThrowValidationException()
+    public async Task ExecuteAsync_ShouldNotCallRepositoryAndHasherAndQueueService_WhenThrowValidationException()
     {
         //GIVEN
         var inputDto = new CreateUserInputDto
@@ -73,21 +79,7 @@ public class CreateUserUsecaseNarrowIntegrationTests
         await _createUserUsecase.ExecuteAsync(inputDto);
         //THEN
         _mockUserRepository.Verify(repository => repository.CreateAsync(It.IsAny<User>()), Times.Never);
-    }
-
-    public async Task ExecuteAsync_ShouldNotCallPasswordHasher_WhenThrowValidationException()
-    {
-        //GIVEN
-        var inputDto = new CreateUserInputDto
-        {
-            Username = "John Doe",
-            Email = "john.doe@hotmail.com",
-            Password = ""
-        };
-        _mockUserDAO.Setup(dao => dao.ExistsByEmailAsync(It.IsAny<string>())).ReturnsAsync(false);
-        //WHEN
-        await _createUserUsecase.ExecuteAsync(inputDto);
-        //THEN
         _mockPasswordHasher.Verify(hasher => hasher.Hash(It.IsAny<string>()), Times.Never);
+        _mockQueueService.Verify(queue => queue.SendMessage(It.IsAny<QueueMessageDto>()),Times.Never);
     }
 }

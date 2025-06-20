@@ -33,13 +33,15 @@ public class UserUnitTests
         var email = "gian@gmail.com";
         var passwordHash = "passwordhash";
         var isEmailConfirmed = true;
+        var emailConfirmationToken = "123456";
         //WHEN
-        var result = User.Restore(id, name, email, passwordHash, isEmailConfirmed);
+        var result = User.Restore(id, name, email, passwordHash, isEmailConfirmed, emailConfirmationToken);
         //THEN
         Assert.AreEqual(id, result.Id);
         Assert.AreEqual(name, result.Name.Value);
         Assert.AreEqual(email, result.Email.Value);
         Assert.AreEqual(passwordHash, result.PasswordHash);
+        Assert.AreEqual(emailConfirmationToken, result.EmailConfirmationToken);
         Assert.IsTrue(result.IsEmailConfirmed);
         Assert.IsNull(result.Password);
     }
