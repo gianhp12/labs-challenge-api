@@ -38,7 +38,7 @@ public class UserDAO : IUserDAO
             _configuration.GetRequiredConnectionString("LabsChallengeDb")
         );
         var resultList = await connection.ExecuteQueryAsync(query);
-        var existsValue = (bool)resultList.First()["ExistsResult"]!;
+        var existsValue = Convert.ToBoolean(resultList.First()["ExistsResult"]);
         return existsValue;
     }
 }

@@ -10,8 +10,9 @@ public class User
     public Password? Password { get; private set; }
     public string? PasswordHash { get; private set; }
     public bool IsEmailConfirmed { get; private set; }
+    public string EmailConfirmationToken { get; private set; }
 
-    private User(int id, Name name, Email email, Password? password, string? passwordHash, bool isEmailConfirmed)
+    private User(int id, Name name, Email email, Password? password, string? passwordHash, bool isEmailConfirmed, string emailConfirmationToken)
     {
         Id = id;
         Name = name;
@@ -19,6 +20,7 @@ public class User
         Password = password;
         PasswordHash = passwordHash;
         IsEmailConfirmed = isEmailConfirmed;
+        EmailConfirmationToken = emailConfirmationToken;
     }
 
     public void SetPasswordHash(string hash)
@@ -31,6 +33,11 @@ public class User
         IsEmailConfirmed = true;
     }
 
+    public void SetEmailConfirmationToken(string token)
+    {
+        EmailConfirmationToken = token;
+    }
+
     public static User Create(string name, string email, string password)
     {
         return new User(
@@ -39,11 +46,12 @@ public class User
             email: new Email(email),
             password: new Password(password),
             passwordHash: null,
-            isEmailConfirmed: false
+            isEmailConfirmed: false,
+            emailConfirmationToken: Guid.NewGuid().ToString()
         );
     }
 
-    public static User Restore(int id, string name, string email, string passwordHash, bool isEmailConfirmed)
+    public static User Restore(int id, string name, string email, string passwordHash, bool isEmailConfirmed, string emailConfirmationToken)
     {
         return new User(
             id: id,
@@ -51,7 +59,8 @@ public class User
             email: new Email(email),
             password: null,
             passwordHash: passwordHash,
-            isEmailConfirmed: isEmailConfirmed
+            isEmailConfirmed: isEmailConfirmed,
+            emailConfirmationToken: emailConfirmationToken
         );
     }
 }

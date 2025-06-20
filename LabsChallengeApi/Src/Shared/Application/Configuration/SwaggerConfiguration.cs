@@ -34,7 +34,7 @@ public static class SwaggerConfiguration
          IWebHostEnvironment env)
     {
         app.UseSwagger();
-        if (env.IsDevelopment())
+        if (env.IsDevelopment() || env.IsStaging())
         {
             app.UseSwaggerUI(options =>
             {

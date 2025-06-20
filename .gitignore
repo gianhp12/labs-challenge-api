@@ -477,7 +477,10 @@ $RECYCLE.BIN/
 *.lnk
 
 # Logs Serilog
+/logs/
 logs-buffer*
+LabsChallengeApi/logs-failed.txt
 
 #Env
 appsettings.Production.json
+

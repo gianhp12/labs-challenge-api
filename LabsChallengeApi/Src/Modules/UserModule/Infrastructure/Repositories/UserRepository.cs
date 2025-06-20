@@ -22,13 +22,14 @@ public class UserRepository : IUserRepository
     {
         var query = new MssqlQueryDto()
         {
-            Query = @"INSERT INTO [Access_Control].[Users] (Name, Email, PasswordHash, IsEmailConfirmed, CreatedAt, UpdatedAt)
-                    VALUES (@Name, @Email, @PasswordHash, @IsEmailConfirmed, @CreatedAt, @UpdatedAt)",
+            Query = @"INSERT INTO [Access_Control].[Users] (Name, Email, PasswordHash, IsEmailConfirmed, EmailConfirmationToken, CreatedAt, UpdatedAt)
+                    VALUES (@Name, @Email, @PasswordHash, @IsEmailConfirmed, @EmailConfirmationToken, @CreatedAt, @UpdatedAt)",
             Parameters = [
                 new ("@Name", user.Name.Value),
                 new ("@Email",user.Email.Value),
                 new ("@PasswordHash", user.PasswordHash),
                 new ("@IsEmailConfirmed", user.IsEmailConfirmed),
+                new ("@EmailConfirmationToken", user.EmailConfirmationToken),
                 new ("@CreatedAt", DateTime.Now),
                 new ("@UpdatedAt", DateTime.Now),
             ]
@@ -59,7 +60,8 @@ public class UserRepository : IUserRepository
             name: (string)result["Name"]!,
             email: (string)result["Email"]!,
             passwordHash: (string)result["PasswordHash"]!,
-            isEmailConfirmed: (bool)result["IsEmailConfirmed"]!
+            isEmailConfirmed: (bool)result["IsEmailConfirmed"]!,
+            emailConfirmationToken: (string)result["EmailConfirmationToken"]!
         );
         return user;
     }
