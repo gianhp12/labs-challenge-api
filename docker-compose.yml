@@ -2,7 +2,7 @@ services:
   labs-challenge-api:
     build:
       context: .
-      dockerfile: ./LabsChallengeApi/Dockerfile
+      dockerfile: ./LabsChallengeApi/dockerfile
     container_name: labs_challenge_api
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
@@ -18,6 +18,22 @@ services:
         condition: service_started
     ports:
       - "8081:8081"
+    
+  email-service-worker:
+    build:
+      context: .
+      dockerfile: ./EmailServiceWorker/dockerfile
+    container_name: email_service_worker
+    environment:
+      - DOTNET_ENVIRONMENT=Staging
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      rabbit-init:
+        condition: service_started
+    restart: unless-stopped
 
   sql-server-db:
     image: mcr.microsoft.com/mssql/server:2022-latest
