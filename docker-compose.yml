@@ -34,16 +34,17 @@ services:
       rabbit-init:
         condition: service_started
     restart: unless-stopped
-
-  labs-challenge-frontend:
+    
+  labs-challenge-front:
     build:
-      context: ./labs-challenge-frontend
-    container_name: labs_challenge_frontend
+      context: ./labs_challenge_front
+      dockerfile: Dockerfile
+    container_name: labs_challenge_front
     ports:
-      - "3000:3000"
+      - "8080:80"
     depends_on:
       - labs-challenge-api
-      
+
   sql-server-db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sql_server_db

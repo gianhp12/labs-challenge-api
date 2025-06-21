@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "logistica_app_prod",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+        },
+        {
+            "name": "logistica_app_dev",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_dev.dart",
+        },
+        {
+            "name": "logistica_app_staging",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_stage.dart",
+        }
+    ]
+}
