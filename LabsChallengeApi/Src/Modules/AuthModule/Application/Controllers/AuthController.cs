@@ -14,11 +14,17 @@ namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
     {
         private readonly IAuthenticateUserUsecase _authenticateUserUsecase;
         private readonly IRegisterUserUsecase _registerUserUsecase;
+        private readonly IValidateEmailTokenUsecase _validateEmailTokenUseCase;
 
-        public AuthController(IAuthenticateUserUsecase authenticateUserUsecase, IRegisterUserUsecase registerUserUsecase)
+        public AuthController(
+            IAuthenticateUserUsecase authenticateUserUsecase,
+            IRegisterUserUsecase registerUserUsecase,
+            IValidateEmailTokenUsecase validateEmailTokenUsecase
+            )
         {
             _authenticateUserUsecase = authenticateUserUsecase;
             _registerUserUsecase = registerUserUsecase;
+            _validateEmailTokenUseCase = validateEmailTokenUsecase;
         }
 
         [HttpPost("login")]
@@ -45,6 +51,20 @@ namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
             try
             {
                 await _registerUserUsecase.ExecuteAsync(dto);
+                return Created();
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new ErrorResponseDto("VALIDATION_EXCEPTION", ex.Message));
+            }
+        }
+
+        [HttpPost("validate-email-token")]
+        public async Task<IActionResult> ValidateEmailToken([FromBody] ValidateEmailTokenInputDto dto)
+        {
+            try
+            {
+                await _validateEmailTokenUseCase.ExecuteAsync(dto);
                 return Created();
             }
             catch (ValidationException ex)

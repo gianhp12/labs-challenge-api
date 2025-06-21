@@ -65,4 +65,18 @@ public class UserRepository : IUserRepository
         );
         return user;
     }
+
+    public async Task UpdateEmailConfirmedAsync(User user)
+    {
+        var query = new MssqlQueryDto()
+        {
+            Query = @"UPDATE [Access_Control].[Users] SET IsEmailConfirmed = @IsEmailConfirmed WHERE Id = @Id",
+            Parameters = [
+                new ("@IsEmailConfirmed", user.IsEmailConfirmed),
+                new("@Id",user.Id)
+            ]
+        };
+        var connection = _sqlConnectionFactory.Create(_configuration.GetRequiredConnectionString("LabsChallengeDb"));
+        await connection.ExecuteNonQueryAsync(query);
+    }
 }
