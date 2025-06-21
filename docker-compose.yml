@@ -1,6 +1,8 @@
 services:
   labs-challenge-api:
-    build: .
+    build:
+      context: .
+      dockerfile: ./LabsChallengeApi/Dockerfile
     container_name: labs_challenge_api
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging

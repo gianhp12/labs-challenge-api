@@ -16,8 +16,8 @@ public static class DependecyInjection
         services.AddSingleton<ILoggerService, SerilogLoggerAdapter>();
         services.AddSingleton<IQueueService, RabbitMqAdapter>();
         services.AddSingleton<InitQueue>();
-        services.AddSingleton<IEmailSender, GmailApiEmailSender>();
-        services.AddTransient<ISendConfirmationTokenEmailUsecase, SendConfirmationTokenEmailUsecase>();
+        services.AddSingleton<IEmailSender, SmtpEmailSender>();
+        services.AddTransient<ISendEmailUsecase, SendEmailUsecase>();
         return services;
     }
 }

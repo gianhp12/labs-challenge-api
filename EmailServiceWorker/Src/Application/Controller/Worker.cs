@@ -13,16 +13,16 @@ public class Worker : BackgroundService
 {
     private readonly ILoggerService _loggerService;
     private readonly IQueueService _queueService;
-    private readonly ISendConfirmationTokenEmailUsecase _sendConfirmationTokenEmailUsecase;
+    private readonly ISendEmailUsecase _sendEmailUsecase;
     private bool IsRunning { get; set; } = false;
 
     public Worker(
         IQueueService queueService,
-        ISendConfirmationTokenEmailUsecase sendConfirmationTokenEmailUsecase,
+        ISendEmailUsecase sendEmailUsecase,
         ILoggerService loggerService)
     {
         _queueService = queueService;
-        _sendConfirmationTokenEmailUsecase = sendConfirmationTokenEmailUsecase;
+        _sendEmailUsecase = sendEmailUsecase;
         _loggerService = loggerService;
     }
 
@@ -79,13 +79,15 @@ public class Worker : BackgroundService
         return messageParsed;
     }
 
-    private async Task SendConfirmationTokenEmail(IChannel channel, BasicDeliverEventArgs args)
+    public async Task SendConfirmationTokenEmail(IChannel channel, BasicDeliverEventArgs args)
     {
         var json = GetJsonFromMessageBytes(args.Body);
         _loggerService.LogInformation("Received message from queue");
         var email = json["Email"]!.ToObject<string>()!;
         var token = json["Token"]!.ToObject<string>()!;
-        await _sendConfirmationTokenEmailUsecase.ExecuteAsync(email: email, token: token);
+        var subject = "Token de confirmação de cadastro";
+        var body = $"O seu token de confirmação é: {token}";
+        await _sendEmailUsecase.ExecuteAsync(email, subject, body);
         await channel.BasicAckAsync(deliveryTag: args.DeliveryTag, multiple: false);
         _loggerService.LogInformation("Message processed successfully");
     }
