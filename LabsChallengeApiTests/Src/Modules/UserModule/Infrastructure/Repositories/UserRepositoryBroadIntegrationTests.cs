@@ -124,6 +124,6 @@ public class UserRepositoryBroadIntegrationTests
         var result = await _connection.ExecuteQueryAsync(queryCheck);
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count);
-        Assert.AreEqual(true, (bool)result[0]["IsEmailConfirmed"]!);;
+        Assert.AreEqual(true, (bool)result[0]["IsEmailConfirmed"]!); ;
     }
 }
