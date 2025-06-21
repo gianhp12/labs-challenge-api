@@ -28,8 +28,8 @@ public static class DependecyInjection
             options.GroupNameFormat = "'v'VVV";
             options.SubstituteApiVersionInUrl = true;
         });
-        services.AddSingleton<InitQueue>();
         services.AddSingleton<IQueueService, RabbitMqAdapter>();
+        services.AddSingleton<InitQueue>();
         services.AddSingleton<ISqlConnectionFactory, SqlServerFactory>();
         services.AddSingleton<ILoggerService, SerilogLoggerAdapter>();
         services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();

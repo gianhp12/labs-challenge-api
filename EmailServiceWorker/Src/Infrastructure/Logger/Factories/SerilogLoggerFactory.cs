@@ -1,8 +1,7 @@
-using LabsChallengeApi.Src.Shared.Infrastructure.Logger.Factories;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 
-namespace LabsChallengeApi.Shared.Infrastructure.Logger.Factories;
+namespace EmailServiceWorker.Src.Infrastructure.Logger.Factories;
 
 public static class SerilogLoggerFactory
 {

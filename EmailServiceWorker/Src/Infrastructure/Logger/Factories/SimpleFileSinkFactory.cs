@@ -2,14 +2,14 @@ using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting.Json;
 
-namespace LabsChallengeApi.Src.Shared.Infrastructure.Logger.Factories;
+namespace EmailServiceWorker.Src.Infrastructure.Logger.Factories;
 
-public class SimpleFileSink : ILogEventSink
+public class SimpleFileSinkFactory : ILogEventSink
 {
     private readonly StreamWriter _writer;
     private readonly JsonFormatter _jsonFormatter;
 
-    public SimpleFileSink(string path)
+    public SimpleFileSinkFactory(string path)
     {
         _writer = new StreamWriter(File.Open(path, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
         {
