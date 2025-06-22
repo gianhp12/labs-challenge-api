@@ -81,7 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator:
                       (value) =>
-                          FormValidators.isRequired(value, fieldName: 'Nome'),
+                          FormValidators.nameValidator(value),
                 ),
                 const SizedBox(height: 20),
                 AppTextFormField(
@@ -132,7 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 if (errorMessage != null) ...[
                   const SizedBox(height: 10),
                   Text(
-                    errorMessage!,
+                    errorMessage,
                     style: const TextStyle(color: Colors.red, fontSize: 14),
                   ),
                 ],

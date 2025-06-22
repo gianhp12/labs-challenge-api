@@ -3,9 +3,9 @@ import 'package:labs_challenge_front/src/modules/auth/interactor/models/authenti
 class AutenticatedUserMapper {
   static AuthenticatedUserModel fromMap(map) {
     return AuthenticatedUserModel(
-      name: map["name"],
+      name: map["username"],
       email: map["email"],
-      token: map["token"],
+      token: map["accessToken"],
       expiresIn: map["expiresIn"],
       isEmailConfirmed: map["isEmailConfirmed"]
     );

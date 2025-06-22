@@ -67,4 +67,15 @@ class FormValidators {
     if (conditionsMet == 3) return 'Senha forte';
     return '';
   }
+
+  static String? nameValidator(String? value) {
+    final requiredValidation = isRequired(value, fieldName: "Nome");
+    if (requiredValidation != null) return requiredValidation;
+    final name = value!.trim();
+    final regex = RegExp(r"^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$");
+    if (!regex.hasMatch(name)) {
+      return 'Informe um nome válido';
+    }
+    return null;
+  }
 }
