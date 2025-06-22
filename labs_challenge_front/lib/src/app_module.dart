@@ -1,5 +1,4 @@
- import 'dart:async';
-
+import 'dart:async';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:labs_challenge_front/src/modules/auth/auth_module.dart';
 import 'package:labs_challenge_front/src/shared/states/session_notifier.dart';
@@ -8,6 +7,7 @@ import 'package:labs_challenge_front/src/shared_module.dart';
 class AppModule extends Module {
   @override
   void binds(Injector i) {
+   
   }
 
   @override
