@@ -126,4 +126,43 @@ public class UserRepositoryBroadIntegrationTests
         Assert.AreEqual(1, result.Count);
         Assert.AreEqual(true, (bool)result[0]["IsEmailConfirmed"]!); ;
     }
+
+    [TestMethod]
+    public async Task UpdateEmailTokenRequestedAtAsync_ShouldUpdateEmailTokenRequestedAtAsync_WhenUserExistsInDatabase()
+    {
+        //GIVEN
+        var queryInit = new MssqlQueryDto
+        {
+            Query = @"TRUNCATE TABLE [Access_Control].[Users]"
+        };
+        await _connection.ExecuteNonQueryAsync(queryInit);
+        var user = User.Create(
+            name: "John Doe",
+            email: "john.doe@gmail.com",
+            password: "J@hn1234"
+        );
+        var encryptPassword = _passwordHasher.Hash(user.Password!.Value);
+        user.SetPasswordHash(encryptPassword);
+        await _userRepository.CreateAsync(user);
+        var userRestored = await _userRepository.GetByEmailAsync(user.Email.Value);
+        //WHEN
+        userRestored.SetEmailTokenRequestedAt();
+        await _userRepository.UpdateEmailTokenRequestedAtAsync(userRestored);
+        //THEN
+        var queryCheck = new MssqlQueryDto()
+        {
+            Query = "SELECT EmailTokenRequestedAt FROM [Access_Control].[Users] WHERE Id = @Id",
+            Parameters = [
+                new("@Id", userRestored.Id)
+            ]
+        };
+        var result = await _connection.ExecuteQueryAsync(queryCheck);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(1, result.Count);
+        var dateBd = (DateTime)result[0]["EmailTokenRequestedAt"]!;
+        var dateUser = userRestored.EmailTokenRequestedAt;
+        var dateBdForCompare = dateBd.ToString("yyyy-MM-dd HH:mm:ss");
+        var dateUserForCompare = dateUser.ToString("yyyy-MM-dd HH:mm:ss");
+        Assert.AreEqual(dateUserForCompare, dateBdForCompare); ;
+    }
 }

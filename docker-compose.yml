@@ -9,7 +9,7 @@ services:
       - ASPNETCORE_URLS=http://+:8081
     depends_on:
       sql-server-db:
-        condition: service_started
+        condition: service_healthy
       elasticsearch:
         condition: service_healthy
       rabbitmq:
@@ -56,6 +56,11 @@ services:
     volumes:
       - ./init/mssqlsettings:/docker-entrypoint-initdb.d:z
     entrypoint: ["/bin/bash", "-c", "/docker-entrypoint-initdb.d/configure-db.sh & /opt/mssql/bin/sqlservr"]
+    healthcheck:
+      test: [ "CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "Magazine123", "-Q", "SELECT 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2

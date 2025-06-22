@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:labs_challenge_front/src/modules/auth/data/mappers/autenticated_user_mapper.dart';
 import 'package:labs_challenge_front/src/modules/auth/interactor/models/authenticated_user_model.dart';
 import 'package:labs_challenge_front/src/modules/auth/interactor/repositories/auth_repository.dart';
@@ -28,12 +27,10 @@ class AuthRepositoryImpl implements AuthRepository {
       final Map<String, dynamic> jsonResult = jsonDecode(result.data);
       final authenticatedUser = AutenticatedUserMapper.fromMap(jsonResult);
       return Success(authenticatedUser);
-    } on RemoteRequestError catch (e) {
-      final Map<String, dynamic> error = jsonDecode(e.error!);
+    } on RemoteRequestError catch (ex) {
       return Failure(
         ConnectionError(
-          errorType: error['error'],
-          errorMessage: error['message'],
+          errorMessage: ex.error ?? "Ocorreu um erro de conexão",
           errorModule: 'auth',
           errorMethod: 'login',
         ),
@@ -41,7 +38,6 @@ class AuthRepositoryImpl implements AuthRepository {
     } catch (e) {
       return Failure(
         RepositoryError(
-          errorType: 'INTERNAL_SERVER_ERROR',
           errorMessage: 'Ocorreu um erro interno',
           errorModule: 'auth',
           errorMethod: 'login',

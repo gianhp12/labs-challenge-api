@@ -22,14 +22,15 @@ public class UserRepository : IUserRepository
     {
         var query = new MssqlQueryDto()
         {
-            Query = @"INSERT INTO [Access_Control].[Users] (Name, Email, PasswordHash, IsEmailConfirmed, EmailConfirmationToken, CreatedAt, UpdatedAt)
-                    VALUES (@Name, @Email, @PasswordHash, @IsEmailConfirmed, @EmailConfirmationToken, @CreatedAt, @UpdatedAt)",
+            Query = @"INSERT INTO [Access_Control].[Users] (Name, Email, PasswordHash, IsEmailConfirmed, EmailConfirmationToken, EmailTokenRequestedAt, CreatedAt, UpdatedAt)
+                    VALUES (@Name, @Email, @PasswordHash, @IsEmailConfirmed, @EmailConfirmationToken, @EmailTokenRequestedAt, @CreatedAt, @UpdatedAt)",
             Parameters = [
                 new ("@Name", user.Name.Value),
                 new ("@Email",user.Email.Value),
                 new ("@PasswordHash", user.PasswordHash),
                 new ("@IsEmailConfirmed", user.IsEmailConfirmed),
                 new ("@EmailConfirmationToken", user.EmailConfirmationToken),
+                new ("@EmailTokenRequestedAt", user.EmailTokenRequestedAt),
                 new ("@CreatedAt", DateTime.Now),
                 new ("@UpdatedAt", DateTime.Now),
             ]
@@ -42,7 +43,7 @@ public class UserRepository : IUserRepository
     {
         var query = new MssqlQueryDto()
         {
-            Query = @"SELECT TOP 1 Id, Name, Email, PasswordHash, IsEmailConfirmed, EmailConfirmationToken
+            Query = @"SELECT TOP 1 Id, Name, Email, PasswordHash, IsEmailConfirmed, EmailConfirmationToken, EmailTokenRequestedAt
                       FROM [Access_Control].[Users] WHERE Email = @Email",
             Parameters = [
                 new ("@Email", email)
@@ -61,7 +62,8 @@ public class UserRepository : IUserRepository
             email: (string)result["Email"]!,
             passwordHash: (string)result["PasswordHash"]!,
             isEmailConfirmed: (bool)result["IsEmailConfirmed"]!,
-            emailConfirmationToken: (string)result["EmailConfirmationToken"]!
+            emailConfirmationToken: (string)result["EmailConfirmationToken"]!,
+            emailTokenRequestedAt: (DateTime)result["EmailTokenRequestedAt"]!
         );
         return user;
     }
@@ -73,6 +75,20 @@ public class UserRepository : IUserRepository
             Query = @"UPDATE [Access_Control].[Users] SET IsEmailConfirmed = @IsEmailConfirmed WHERE Id = @Id",
             Parameters = [
                 new ("@IsEmailConfirmed", user.IsEmailConfirmed),
+                new("@Id",user.Id)
+            ]
+        };
+        var connection = _sqlConnectionFactory.Create(_configuration.GetRequiredConnectionString("LabsChallengeDb"));
+        await connection.ExecuteNonQueryAsync(query);
+    }
+
+    public async Task UpdateEmailTokenRequestedAtAsync(User user)
+    {
+        var query = new MssqlQueryDto()
+        {
+            Query = @"UPDATE [Access_Control].[Users] SET EmailTokenRequestedAt = @EmailTokenRequestedAt WHERE Id = @Id",
+            Parameters = [
+                new ("@EmailTokenRequestedAt", user.EmailTokenRequestedAt),
                 new("@Id",user.Id)
             ]
         };

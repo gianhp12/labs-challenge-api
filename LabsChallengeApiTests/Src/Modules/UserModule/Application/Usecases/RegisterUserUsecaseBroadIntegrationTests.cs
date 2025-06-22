@@ -47,7 +47,7 @@ public class RegisterUserUsecaseBroadIntegrationTests
     }
 
     [TestMethod]
-    public async Task CreateAsync_ShouldSendMessageForRabbitMq_WhenUserIsValidAndSaveInDb()
+    public async Task ExecuteAsync_ShouldSendMessageForRabbitMq_WhenUserIsValidAndSaveInDb()
     {
         //GIVEN
         await _queueService.CreateConnection();
@@ -56,8 +56,8 @@ public class RegisterUserUsecaseBroadIntegrationTests
         await _rabbitHelper.PurgeQueueAsync(queueName);
         var inputDto = new RegisterUserInputDto
         {
-            Username = "John Doe",
-            Email = "john.doe@hotmail.com",
+            Username = "Gian Henrique",
+            Email = "gian_htc@hotmail.com",
             Password = "Teste1234@"
         };
         _mockUserDAO.Setup(dao => dao.ExistsByEmailAsync(It.IsAny<string>())).ReturnsAsync(false);

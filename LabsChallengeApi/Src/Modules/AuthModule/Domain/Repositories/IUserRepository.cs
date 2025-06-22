@@ -7,4 +7,5 @@ public interface IUserRepository
     Task CreateAsync(User user);
     Task<User> GetByEmailAsync(string email);
     Task UpdateEmailConfirmedAsync(User user);
+    Task UpdateEmailTokenRequestedAtAsync(User user);
 }

@@ -11,8 +11,18 @@ public class User
     public string? PasswordHash { get; private set; }
     public bool IsEmailConfirmed { get; private set; }
     public string EmailConfirmationToken { get; private set; }
+    public DateTime EmailTokenRequestedAt { get; private set; }
 
-    private User(int id, Name name, Email email, Password? password, string? passwordHash, bool isEmailConfirmed, string emailConfirmationToken)
+    private User(
+        int id,
+        Name name,
+        Email email,
+        Password? password,
+        string? passwordHash,
+        bool isEmailConfirmed,
+        string emailConfirmationToken,
+        DateTime emailTokenRequestedAt
+    )
     {
         Id = id;
         Name = name;
@@ -21,6 +31,7 @@ public class User
         PasswordHash = passwordHash;
         IsEmailConfirmed = isEmailConfirmed;
         EmailConfirmationToken = emailConfirmationToken;
+        EmailTokenRequestedAt = emailTokenRequestedAt;
     }
 
     public void SetPasswordHash(string hash)
@@ -33,9 +44,9 @@ public class User
         IsEmailConfirmed = true;
     }
 
-    public void SetEmailConfirmationToken(string token)
+    public void SetEmailTokenRequestedAt()
     {
-        EmailConfirmationToken = token;
+        EmailTokenRequestedAt = DateTime.UtcNow;
     }
 
     public static User Create(string name, string email, string password)
@@ -47,11 +58,20 @@ public class User
             password: new Password(password),
             passwordHash: null,
             isEmailConfirmed: false,
-            emailConfirmationToken: Guid.NewGuid().ToString()
+            emailConfirmationToken: Guid.NewGuid().ToString(),
+            emailTokenRequestedAt: DateTime.UtcNow
         );
     }
 
-    public static User Restore(int id, string name, string email, string passwordHash, bool isEmailConfirmed, string emailConfirmationToken)
+    public static User Restore(
+        int id,
+        string name,
+        string email,
+        string passwordHash,
+        bool isEmailConfirmed,
+        string emailConfirmationToken,
+        DateTime emailTokenRequestedAt
+        )
     {
         return new User(
             id: id,
@@ -60,7 +80,8 @@ public class User
             password: null,
             passwordHash: passwordHash,
             isEmailConfirmed: isEmailConfirmed,
-            emailConfirmationToken: emailConfirmationToken
+            emailConfirmationToken: emailConfirmationToken,
+            emailTokenRequestedAt: emailTokenRequestedAt
         );
     }
 }

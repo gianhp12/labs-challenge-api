@@ -42,7 +42,8 @@ public class AuthenticateUserUsecaseNarrowIntegrationTests
             email: "john.doe@hotmail.com",
             passwordHash: "password-hash",
             isEmailConfirmed: true,
-            emailConfirmationToken: ""
+            emailConfirmationToken: "",
+            emailTokenRequestedAt: DateTime.Now
         );
         var tokenDto = new TokenDto
         (
@@ -75,7 +76,8 @@ public class AuthenticateUserUsecaseNarrowIntegrationTests
             email: "john.doe@hotmail.com",
             passwordHash: "password-hash",
             isEmailConfirmed: true,
-            emailConfirmationToken: ""
+            emailConfirmationToken: "",
+            emailTokenRequestedAt: DateTime.Now
         );
         _mockUserRepository.Setup(repository => repository.GetByEmailAsync(It.IsAny<string>())).ReturnsAsync(user);
         _mockPasswordHasher.Setup(hasher => hasher.Verify(It.IsAny<string>(), It.IsAny<string>())).Returns(false);
@@ -101,7 +103,8 @@ public class AuthenticateUserUsecaseNarrowIntegrationTests
             email: "john.doe@hotmail.com",
             passwordHash: "password-hash",
             isEmailConfirmed: false,
-            emailConfirmationToken: ""
+            emailConfirmationToken: "",
+            emailTokenRequestedAt: DateTime.Now
         );
         _mockUserRepository.Setup(repository => repository.GetByEmailAsync(It.IsAny<string>())).ReturnsAsync(user);
         _mockPasswordHasher.Setup(hasher => hasher.Verify(It.IsAny<string>(), It.IsAny<string>())).Returns(true);

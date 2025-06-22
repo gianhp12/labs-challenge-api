@@ -13,6 +13,7 @@ public static class AuthModuleDependencyInjection
         services.AddScoped<IAuthenticateUserUsecase, AuthenticateUserUsecase>();
         services.AddScoped<IRegisterUserUsecase, RegisterUserUsecase>();
         services.AddScoped<IValidateEmailTokenUsecase, ValidateEmailTokenUsecase>();
+        services.AddScoped<IResendEmailTokenUsecase, ResendEmailTokenUsecase>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserDAO, UserDAO>();
         return services;

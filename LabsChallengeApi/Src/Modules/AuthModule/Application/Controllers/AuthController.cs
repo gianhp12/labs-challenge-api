@@ -2,7 +2,6 @@ using LabsChallengeApi.Src.Modules.AuthModule.Application.Dtos.Input;
 using LabsChallengeApi.Src.Modules.AuthModule.Application.Exceptions;
 using LabsChallengeApi.Src.Modules.AuthModule.Application.Usecases;
 using LabsChallengeApi.Src.Shared.Application.Exceptions;
-using LabsChallengeApi.Src.Shared.Application.Exceptions.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
@@ -15,16 +14,19 @@ namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
         private readonly IAuthenticateUserUsecase _authenticateUserUsecase;
         private readonly IRegisterUserUsecase _registerUserUsecase;
         private readonly IValidateEmailTokenUsecase _validateEmailTokenUseCase;
+        private readonly IResendEmailTokenUsecase _resendEmailTokenUsecase;
 
         public AuthController(
             IAuthenticateUserUsecase authenticateUserUsecase,
             IRegisterUserUsecase registerUserUsecase,
-            IValidateEmailTokenUsecase validateEmailTokenUsecase
+            IValidateEmailTokenUsecase validateEmailTokenUsecase,
+            IResendEmailTokenUsecase resendEmailTokenUsecase
             )
         {
             _authenticateUserUsecase = authenticateUserUsecase;
             _registerUserUsecase = registerUserUsecase;
             _validateEmailTokenUseCase = validateEmailTokenUsecase;
+            _resendEmailTokenUsecase = resendEmailTokenUsecase;
         }
 
         [HttpPost("login")]
@@ -37,11 +39,11 @@ namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
             }
             catch (EmailNotConfirmedException ex)
             {
-                return BadRequest(new ErrorResponseDto("EMAIL_NOT_CONFIRMED", ex.Message));
+                return BadRequest(ex.Message);
             }
             catch (ValidationException ex)
             {
-                return BadRequest(new ErrorResponseDto("VALIDATION_EXCEPTION", ex.Message));
+                return BadRequest(ex.Message);
             }
         }
 
@@ -55,7 +57,7 @@ namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
             }
             catch (ValidationException ex)
             {
-                return BadRequest(new ErrorResponseDto("VALIDATION_EXCEPTION", ex.Message));
+                return BadRequest(ex.Message);
             }
         }
 
@@ -65,11 +67,25 @@ namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
             try
             {
                 await _validateEmailTokenUseCase.ExecuteAsync(dto);
-                return Created();
+                return Ok();
             }
             catch (ValidationException ex)
             {
-                return BadRequest(new ErrorResponseDto("VALIDATION_EXCEPTION", ex.Message));
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("resend-email-token")]
+        public async Task<IActionResult> ResendEmailToken([FromQuery] string email)
+        {
+            try
+            {
+                await _resendEmailTokenUsecase.ExecuteAsync(email);
+                return Accepted();
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

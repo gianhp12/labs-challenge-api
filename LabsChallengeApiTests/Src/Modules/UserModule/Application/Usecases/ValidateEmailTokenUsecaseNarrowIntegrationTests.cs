@@ -35,7 +35,8 @@ public class ValidateEmailTokenUsecaseNarrowIntegrationTests
             email: "john.doe@hotmail.com",
             passwordHash: "password-hash",
             isEmailConfirmed: false,
-            emailConfirmationToken: "test-token"
+            emailConfirmationToken: "test-token",
+            emailTokenRequestedAt: DateTime.Now
         );
         _mockUserRepository.Setup(repository => repository.GetByEmailAsync(It.IsAny<string>())).ReturnsAsync(user);
         //WHEN
@@ -59,7 +60,8 @@ public class ValidateEmailTokenUsecaseNarrowIntegrationTests
             email: "john.doe@hotmail.com",
             passwordHash: "password-hash",
             isEmailConfirmed: false,
-            emailConfirmationToken: "token-test"
+            emailConfirmationToken: "token-test",
+            emailTokenRequestedAt: DateTime.Now
         );
         _mockUserRepository.Setup(repository => repository.GetByEmailAsync(It.IsAny<string>())).ReturnsAsync(user);
         //WHEN

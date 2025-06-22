@@ -34,8 +34,9 @@ public class UserUnitTests
         var passwordHash = "passwordhash";
         var isEmailConfirmed = true;
         var emailConfirmationToken = "123456";
+        var emailTokenRequestedAt = DateTime.Now;
         //WHEN
-        var result = User.Restore(id, name, email, passwordHash, isEmailConfirmed, emailConfirmationToken);
+        var result = User.Restore(id, name, email, passwordHash, isEmailConfirmed, emailConfirmationToken, emailTokenRequestedAt);
         //THEN
         Assert.AreEqual(id, result.Id);
         Assert.AreEqual(name, result.Name.Value);
