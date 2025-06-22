@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:labs_challenge_front/src/modules/auth/ui/widgets/back_to_home_button.dart';
+import 'package:labs_challenge_front/src/modules/auth/interactor/actions/auth_register_actions.dart';
+import 'package:labs_challenge_front/src/modules/auth/interactor/states/auth_register_state.dart';
+import 'package:labs_challenge_front/src/modules/auth/ui/widgets/auth_container.dart';
 import 'package:labs_challenge_front/src/modules/auth/ui/widgets/password_strength_indicator.dart';
 import 'package:labs_challenge_front/src/shared/utils/form_validators.dart';
 import 'package:labs_challenge_front/src/shared/widgets/app_button.dart';
@@ -14,22 +16,26 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final _actions = Modular.get<AuthRegisterActions>();
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
   final _nameFocus = FocusNode();
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
-
-  bool isLoading = false;
-  String? errorMessage;
   String passwordStrengthText = '';
 
   @override
   void initState() {
     super.initState();
+     _actions.addListener(() {
+      final state = _actions.currentState;
+      if (state is SuccessAuthRegisterState) {
+        Modular.to.navigate('/validate-token');
+      }
+      setState(() {});
+    });
     _passwordFocus.addListener(() {
       if (!_passwordFocus.hasFocus) {
         setState(() {
@@ -53,45 +59,20 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final state = _actions.currentState;
+    final isLoading = state is LoadingAuthRegisterState;
+    final errorMessage = (state is ErrorAuthRegisterState) ? state.exception : null;
     return Scaffold(
       backgroundColor: Colors.blue.shade50,
       body: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 450),
-          padding: const EdgeInsets.all(32),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 20,
-                offset: Offset(0, 10),
-              ),
-            ],
-          ),
+        child: AuthContainer(
+          showBackButton: true,
+          subtitle: "Crie sua conta para começar",
           child: Form(
             key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const BackToHomeButton(),
-                const Icon(Icons.local_shipping, size: 64, color: Colors.blue),
-                const SizedBox(height: 10),
-                const Text(
-                  "Logistica App",
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  "Crie sua conta para começar",
-                  style: TextStyle(fontSize: 16, color: Colors.black54),
-                ),
-                const SizedBox(height: 24),
                 AppTextFormField(
                   controller: _nameController,
                   label: "Nome",
@@ -102,9 +83,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       (value) =>
                           FormValidators.isRequired(value, fieldName: 'Nome'),
                 ),
-
                 const SizedBox(height: 20),
-
                 AppTextFormField(
                   controller: _emailController,
                   label: "E-mail",
@@ -113,9 +92,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   validator: (value) => FormValidators.isEmail(value),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
-
                 const SizedBox(height: 20),
-
                 AppTextFormField(
                   controller: _passwordController,
                   label: "Senha",
@@ -142,9 +119,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     label: 'Cadastrar',
                     isLoading: isLoading,
                     backgroundColor: Colors.blue.shade700,
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        Modular.to.pushNamed('/validate-token');
+                        final username = _nameController.text;
+                        final email = _emailController.text;
+                        final password = _passwordController.text;
+                        await _actions.register(username, email, password);
                       }
                     },
                   ),

@@ -28,16 +28,13 @@ public class AuthenticateUserUsecase : IAuthenticateUserUsecase
         {
             throw new ValidationException("Usuário ou seha inválidos, verifique e tente novamente");
         }
-        if (!user.IsEmailConfirmed)
-        {
-            throw new ValidationException("O e-mail ainda não foi confirmado. Verifique sua caixa de entrada e confirme o cadastro utilizando o token enviado.");
-        }
         var token = _tokenService.GenerateToken(user.Email.Value, user.Name.Value);
         return new AuthenticatedUserOutputDto(
             username: user.Name.Value,
             email: user.Email.Value,
             accessToken: token.AccessToken,
-            expiresIn: token.ExpiresIn
+            expiresIn: token.ExpiresIn,
+            isEmailConfirmed: user.IsEmailConfirmed
         );
     }
 }

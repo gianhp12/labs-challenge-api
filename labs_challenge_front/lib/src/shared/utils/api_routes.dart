@@ -6,9 +6,9 @@ class ApiRoutes {
       case Flavor.dev:
         return 'http://127.0.0.1:8081';
       case Flavor.stage:
-        return 'http://labs-challenge-api:8081';
+        return 'http://127.0.0.1:8081';
       case Flavor.prod:
-        return 'http://labs-challenge-api:8081';
+        return 'http://127.0.0.1:8081';
     }
   }
 

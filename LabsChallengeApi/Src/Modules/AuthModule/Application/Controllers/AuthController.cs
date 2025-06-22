@@ -1,5 +1,4 @@
 using LabsChallengeApi.Src.Modules.AuthModule.Application.Dtos.Input;
-using LabsChallengeApi.Src.Modules.AuthModule.Application.Exceptions;
 using LabsChallengeApi.Src.Modules.AuthModule.Application.Usecases;
 using LabsChallengeApi.Src.Shared.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -37,13 +36,13 @@ namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
                 var result = await _authenticateUserUsecase.ExecuteAsync(dto);
                 return Ok(result);
             }
-            catch (EmailNotConfirmedException ex)
-            {
-                return BadRequest(ex.Message);
-            }
             catch (ValidationException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
         }
 
@@ -59,6 +58,10 @@ namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
             {
                 return BadRequest(ex.Message);
             }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost("validate-email-token")]
@@ -73,10 +76,14 @@ namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
             {
                 return BadRequest(ex.Message);
             }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost("resend-email-token")]
-        public async Task<IActionResult> ResendEmailToken([FromQuery] string email)
+        public async Task<IActionResult> ResendEmailToken([FromBody] string email)
         {
             try
             {
@@ -87,6 +94,11 @@ namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
             {
                 return BadRequest(ex.Message);
             }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            
         }
     }
 }

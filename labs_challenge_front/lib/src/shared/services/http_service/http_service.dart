@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
+import 'package:labs_challenge_front/src/shared/errors/common_errors.dart';
 import 'package:labs_challenge_front/src/shared/services/http_service/http_error.dart';
 import 'package:labs_challenge_front/src/shared/services/http_service/http_respose_model.dart';
 import 'package:labs_challenge_front/src/shared/states/session_notifier.dart';
@@ -126,7 +127,7 @@ class HttpServiceImpl implements HttpService {
     }
   }
 
-  RemoteRequestError? _verifyHttpError(
+  Exception? _verifyHttpError(
     int statusCode,
     String? body,
     String request,

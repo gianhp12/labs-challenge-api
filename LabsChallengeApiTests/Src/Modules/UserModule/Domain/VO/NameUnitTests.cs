@@ -25,7 +25,7 @@ public class NameUnitTests
         // WHEN
         var result = Assert.ThrowsException<ValidationException>(() => new Name(input));
         // THEN
-        Assert.IsTrue(result.Errors!.Contains("O nome não pode ser vazio."));
+        Assert.AreEqual(result.Message, "O nome não pode ser vazio.");
     }
 
     [TestMethod]
@@ -36,7 +36,7 @@ public class NameUnitTests
         // WHEN
         var result = Assert.ThrowsException<ValidationException>(() => new Name(input));
         // THEN
-        Assert.IsTrue(result.Errors!.Any(e => e.Contains("O nome deve conter apenas letras")));
+        Assert.AreEqual(result.Message, "O nome deve conter apenas letras e acentuação, não são permitidos números ou caracteres especiais.");
     }
 
     [TestMethod]
@@ -47,7 +47,7 @@ public class NameUnitTests
         // WHEN
         var result = Assert.ThrowsException<ValidationException>(() => new Name(input));
         // THEN
-        Assert.IsTrue(result.Errors!.Any(e => e.Contains("O nome deve conter apenas letras")));
+        Assert.AreEqual(result.Message, "O nome deve conter apenas letras e acentuação, não são permitidos números ou caracteres especiais.");
     }
 
     [TestMethod]

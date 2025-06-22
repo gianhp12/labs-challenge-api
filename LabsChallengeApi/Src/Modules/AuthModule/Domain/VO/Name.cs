@@ -9,13 +9,10 @@ public sealed class Name
 
     public Name(string value)
     {
-        var errors = new List<string>();
         if (string.IsNullOrWhiteSpace(value))
-            errors.Add("O nome não pode ser vazio.");
+            throw new ValidationException("O nome não pode ser vazio.");
         if (!IsValid(value))
-            errors.Add("O nome deve conter apenas letras e acentuação, não são permitidos números ou caracteres especiais.");
-        if (errors.Any())
-            throw new ValidationException(errors);
+            throw new ValidationException("O nome deve conter apenas letras e acentuação, não são permitidos números ou caracteres especiais.");
         Value = value;
     }
 

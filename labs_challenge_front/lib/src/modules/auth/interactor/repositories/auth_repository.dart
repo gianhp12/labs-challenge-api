@@ -7,4 +7,10 @@ abstract interface class AuthRepository {
     String email,
     String password,
   );
+
+  AsyncResult<void, AppError> register(
+    String username,
+    String email,
+    String password,
+  );
 }

@@ -7,6 +7,7 @@ class AutenticatedUserMapper {
       email: map["email"],
       token: map["token"],
       expiresIn: map["expiresIn"],
+      isEmailConfirmed: map["isEmailConfirmed"]
     );
   }
 }

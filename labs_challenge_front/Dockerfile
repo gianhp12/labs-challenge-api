@@ -3,7 +3,7 @@ FROM ghcr.io/cirruslabs/flutter:latest AS build
 WORKDIR /app
 COPY . .
 
-RUN flutter build web
+RUN flutter build web -t lib/main_stage.dart
 
 # Etapa 2: Servir os arquivos usando NGINX
 FROM nginx:alpine

@@ -9,15 +9,10 @@ public sealed class Email
 
     public Email(string value)
     {
-        var errors = new List<string>();
         if (string.IsNullOrWhiteSpace(value))
-            errors.Add("O email não pode ser vazio.");
+            throw new ValidationException("O email não pode ser vazio.");
         if (!IsValid(value))
-            errors.Add("O email informado é inválido.");
-        if (errors.Any())
-        {
-            throw new ValidationException(errors);
-        }
+            throw new ValidationException("O email informado é inválido.");
         Value = value;
     }
 

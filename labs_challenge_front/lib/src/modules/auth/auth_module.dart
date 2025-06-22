@@ -1,6 +1,7 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:labs_challenge_front/src/modules/auth/data/repositories/auth_repository_impl.dart';
-import 'package:labs_challenge_front/src/modules/auth/interactor/actions/auth_actions.dart';
+import 'package:labs_challenge_front/src/modules/auth/interactor/actions/auth_login_actions.dart';
+import 'package:labs_challenge_front/src/modules/auth/interactor/actions/auth_register_actions.dart';
 import 'package:labs_challenge_front/src/modules/auth/interactor/repositories/auth_repository.dart';
 import 'package:labs_challenge_front/src/modules/auth/ui/pages/auth_page.dart';
 import 'package:labs_challenge_front/src/modules/auth/ui/pages/register_page.dart';
@@ -11,7 +12,8 @@ class AuthModule extends Module {
   @override
   void binds(Injector i) {
     //ACTIONS
-     i.add<AuthActions>(AuthActions.new);
+     i.add<AuthLoginActions>(AuthLoginActions.new);
+     i.add<AuthRegisterActions>(AuthRegisterActions.new);
      //REPOSITORIES
      i.add<AuthRepository>(
         AuthRepositoryImpl.new);

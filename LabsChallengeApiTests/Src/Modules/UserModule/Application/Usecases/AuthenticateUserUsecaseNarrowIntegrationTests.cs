@@ -87,31 +87,4 @@ public class AuthenticateUserUsecaseNarrowIntegrationTests
         _mockPasswordHasher.Verify(hasher => hasher.Verify(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         _mockTokenService.Verify(token => token.GenerateToken(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
     }
-
-    [TestMethod]
-    public async Task ExecuteAsync_ShouldNotCallTokenServiceAndReturnValidationException_WhenUserEmailIsNotConfirmed()
-    {
-        //GIVEN
-        var inputDto = new AuthenticateInputDto
-        {
-            Email = "john.doe@hotmail.com",
-            Password = "Teste1234@"
-        };
-        var user = User.Restore(
-            id: 1,
-            name: "John Doe",
-            email: "john.doe@hotmail.com",
-            passwordHash: "password-hash",
-            isEmailConfirmed: false,
-            emailConfirmationToken: "",
-            emailTokenRequestedAt: DateTime.Now
-        );
-        _mockUserRepository.Setup(repository => repository.GetByEmailAsync(It.IsAny<string>())).ReturnsAsync(user);
-        _mockPasswordHasher.Setup(hasher => hasher.Verify(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
-        //WHEN  //THEN
-        await Assert.ThrowsExceptionAsync<ValidationException>(() => _authenticateUserUsecase.ExecuteAsync(inputDto));
-        _mockUserRepository.Verify(repository => repository.GetByEmailAsync(It.IsAny<string>()), Times.Once);
-        _mockPasswordHasher.Verify(hasher => hasher.Verify(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-        _mockTokenService.Verify(token => token.GenerateToken(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
-    }
 }

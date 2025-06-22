@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:labs_challenge_front/src/modules/auth/interactor/actions/auth_actions.dart';
-import 'package:labs_challenge_front/src/modules/auth/interactor/states/auth_state.dart';
+import 'package:labs_challenge_front/src/modules/auth/interactor/actions/auth_login_actions.dart';
+import 'package:labs_challenge_front/src/modules/auth/interactor/states/auth_login_state.dart';
+import 'package:labs_challenge_front/src/modules/auth/ui/widgets/auth_container.dart';
 import 'package:labs_challenge_front/src/shared/utils/form_validators.dart';
 import 'package:labs_challenge_front/src/shared/widgets/app_button.dart';
 import 'package:labs_challenge_front/src/shared/widgets/app_text_form_field.dart';
@@ -20,18 +21,25 @@ class _AuthPageState extends State<AuthPage> {
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
 
-  final _actions = Modular.get<AuthActions>();
+  final _actions = Modular.get<AuthLoginActions>();
 
   @override
   void initState() {
     super.initState();
     _actions.addListener(() {
+      final state = _actions.currentState;
+      if (state is GettedAuthLoginState) {
+        if (state.authenticatedUser!.isEmailConfirmed) {
+          return Modular.to.navigate('/home');
+        }
+        Modular.to.navigate('/validate-token');
+      }
       setState(() {});
     });
 
     void clearError() {
       final current = _actions.currentState;
-      if (current is ErrorAuthState) {
+      if (current is ErrorAuthLoginState) {
         _actions.reset();
       }
     }
@@ -62,47 +70,21 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     final state = _actions.currentState;
-    final isLoading = state is LoadingAuthState;
-    final errorMessage = (state is ErrorAuthState) ? state.exception : null;
+    final isLoading = state is LoadingAuthLoginState;
+    final errorMessage =
+        (state is ErrorAuthLoginState) ? state.exception : null;
 
     return Scaffold(
       backgroundColor: Colors.blue.shade50,
       body: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 450),
-          padding: const EdgeInsets.all(32),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black,
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
+        child: AuthContainer(
+          showBackButton: false,
+          subtitle: "Faça login para continuar",
           child: Form(
             key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.local_shipping, size: 64, color: Colors.blue),
-                const SizedBox(height: 20),
-                const Text(
-                  "Logistica App",
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  "Faça login para continuar",
-                  style: TextStyle(fontSize: 16, color: Colors.black54),
-                ),
-                const SizedBox(height: 24),
                 AppTextFormField(
                   controller: _emailController,
                   label: "E-mail",

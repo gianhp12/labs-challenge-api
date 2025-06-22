@@ -28,19 +28,52 @@ class AuthRepositoryImpl implements AuthRepository {
       final authenticatedUser = AutenticatedUserMapper.fromMap(jsonResult);
       return Success(authenticatedUser);
     } on RemoteRequestError catch (ex) {
+      if (ex is BadRequest || ex is NotFound) {
+        return Failure(
+          ConnectionError(
+            errorMessage: ex.error!,
+            errorModule: 'auth',
+            errorMethod: 'login',
+          ),
+        );
+      }
       return Failure(
         ConnectionError(
-          errorMessage: ex.error ?? "Ocorreu um erro de conexão",
+          errorMessage: 'Ocorreu um erro interno na API',
           errorModule: 'auth',
           errorMethod: 'login',
         ),
       );
-    } catch (e) {
+    }
+  }
+
+  @override
+  AsyncResult<void, AppError> register(
+    String username,
+    String email,
+    String password,
+  ) async {
+    try {
+      await _httpService.post(
+        ApiRoutes.registerUser,
+        body: {"username": username, "email": email, "password": password},
+      );
+      return Success(1);
+    } on RemoteRequestError catch (ex) {
+      if (ex is BadRequest) {
+        return Failure(
+          ConnectionError(
+            errorMessage: ex.error!,
+            errorModule: 'auth',
+            errorMethod: 'register',
+          ),
+        );
+      }
       return Failure(
-        RepositoryError(
-          errorMessage: 'Ocorreu um erro interno',
+        ConnectionError(
+          errorMessage: "Ocorreu um erro interno na API",
           errorModule: 'auth',
-          errorMethod: 'login',
+          errorMethod: 'register',
         ),
       );
     }

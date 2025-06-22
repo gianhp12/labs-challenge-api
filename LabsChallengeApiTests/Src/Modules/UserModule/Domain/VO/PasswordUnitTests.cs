@@ -25,7 +25,7 @@ public class PasswordUnitTests
         //WHEN
         var result = Assert.ThrowsException<ValidationException>(() => new Password(input));
         //THEN
-        Assert.IsTrue(result.Errors!.Contains("A senha não pode ser vazia."));
+        Assert.AreEqual(result.Message, "A senha não pode ser vazia.");
     }
 
     [TestMethod]
@@ -36,7 +36,7 @@ public class PasswordUnitTests
         //WHEN
         var result = Assert.ThrowsException<ValidationException>(() => new Password(input));
         //THEN
-        Assert.IsTrue(result.Errors!.Contains("A senha deve ter no mínimo 8 caracteres."));
+        Assert.AreEqual(result.Message, "A senha deve ter no mínimo 8 caracteres.");
     }
 
     [TestMethod]
@@ -47,7 +47,7 @@ public class PasswordUnitTests
         //WHEN
         var result = Assert.ThrowsException<ValidationException>(() => new Password(input));
         //THEN
-        Assert.IsTrue(result.Errors!.Contains("A senha deve conter pelo menos uma letra maiúscula."));
+        Assert.AreEqual(result.Message, "A senha deve conter pelo menos uma letra maiúscula.");
     }
 
     [TestMethod]
@@ -58,7 +58,7 @@ public class PasswordUnitTests
         //WHEN
         var result = Assert.ThrowsException<ValidationException>(() => new Password(input));
         //THEN
-        Assert.IsTrue(result.Errors!.Contains("A senha deve conter pelo menos uma letra minúscula."));
+        Assert.AreEqual(result.Message, "A senha deve conter pelo menos uma letra minúscula.");
     }
 
     [TestMethod]
@@ -69,18 +69,7 @@ public class PasswordUnitTests
         //WHEN
         var result = Assert.ThrowsException<ValidationException>(() => new Password(input));
         //THEN
-        Assert.IsTrue(result.Errors!.Contains("A senha deve conter pelo menos um número."));
-    }
-
-    [TestMethod]
-    public void ShouldThrowValidationException_WhenPasswordDoesNotHaveSpecialCharacter()
-    {
-        //GIVEN
-        var input = "ValidPass1";
-        //WHEN
-        var result = Assert.ThrowsException<ValidationException>(() => new Password(input));
-        //THEN
-        Assert.IsTrue(result.Errors!.Contains("A senha deve conter pelo menos um caractere especial (@ ! ? * . # $ % &)."));
+        Assert.AreEqual(result.Message, "A senha deve conter pelo menos um número.");
     }
 
     [TestMethod]

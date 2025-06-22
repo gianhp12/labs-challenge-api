@@ -57,7 +57,7 @@ public class UserUnitTests
         //WHEN
         var result = Assert.ThrowsException<ValidationException>(() => User.Create(name, email, password));
         //THEN
-        Assert.IsTrue(result.Errors!.Contains("O email informado é inválido."));
+        Assert.AreEqual(result.Message, "O email informado é inválido.");
     }
 
     [TestMethod]
@@ -70,7 +70,7 @@ public class UserUnitTests
         //WHEN
         var result = Assert.ThrowsException<ValidationException>(() => User.Create(name, email, password));
         //THEN
-        Assert.IsTrue(result.Errors!.Contains("A senha deve ter no mínimo 8 caracteres."));
+        Assert.AreEqual(result.Message, "A senha deve ter no mínimo 8 caracteres.");
     }
 
     [TestMethod]

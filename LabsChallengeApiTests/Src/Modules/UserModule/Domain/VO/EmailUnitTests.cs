@@ -25,7 +25,7 @@ public class EmailUnitTests
         //WHEN
         var result = Assert.ThrowsException<ValidationException>(() => new Email(input));
         //THEN
-        Assert.IsTrue(result.Errors!.Contains("O email não pode ser vazio."));
+        Assert.AreEqual(result.Message, "O email não pode ser vazio.");
     }
 
     [TestMethod]
@@ -36,6 +36,6 @@ public class EmailUnitTests
         //WHEN
         var result = Assert.ThrowsException<ValidationException>(() => new Email(input));
         //THEN
-        Assert.IsTrue(result.Errors!.Contains("O email informado é inválido."));
+        Assert.AreEqual(result.Message, "O email informado é inválido.");
     }
 }
