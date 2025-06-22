@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:labs_challenge_front/src/modules/auth/auth_module.dart';
+import 'package:labs_challenge_front/src/modules/home/home_module.dart';
 import 'package:labs_challenge_front/src/shared/states/session_notifier.dart';
 import 'package:labs_challenge_front/src/shared_module.dart';
 
@@ -13,6 +14,7 @@ class AppModule extends Module {
   @override
   void routes(RouteManager r) {
     r.module('/', module: AuthModule());
+    r.module('/home', module: HomeModule());
   }
 
   @override
@@ -23,7 +25,7 @@ class AppModule extends Module {
 
 class AuthGuard extends RouteGuard {
   AuthGuard() : super(redirectTo: '/');
-
+  
   @override
   FutureOr<bool> canActivate(String path, ParallelRoute route) {
     final session = Modular.routerDelegate.navigatorKey.currentContext!

@@ -3,6 +3,8 @@ import 'package:labs_challenge_front/src/modules/auth/data/repositories/auth_rep
 import 'package:labs_challenge_front/src/modules/auth/interactor/actions/auth_actions.dart';
 import 'package:labs_challenge_front/src/modules/auth/interactor/repositories/auth_repository.dart';
 import 'package:labs_challenge_front/src/modules/auth/ui/pages/auth_page.dart';
+import 'package:labs_challenge_front/src/modules/auth/ui/pages/register_page.dart';
+import 'package:labs_challenge_front/src/modules/auth/ui/pages/validate_token_page.dart';
 import 'package:labs_challenge_front/src/shared_module.dart';
 
 class AuthModule extends Module {
@@ -20,7 +22,17 @@ class AuthModule extends Module {
     r.child(
       '/',
       child: (context) => const AuthPage(),
-      transition: TransitionType.downToUp,
+      transition: TransitionType.fadeIn,
+    );
+    r.child(
+      '/register',
+      child: (context) => const RegisterPage(),
+      transition: TransitionType.fadeIn,
+    );
+    r.child(
+      '/validate-token',
+      child: (context) => const ValidateTokenPage(),
+      transition: TransitionType.fadeIn,
     );
   }
 
