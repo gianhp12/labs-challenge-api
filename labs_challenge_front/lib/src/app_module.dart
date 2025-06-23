@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:labs_challenge_front/src/modules/auth/auth_module.dart';
 import 'package:labs_challenge_front/src/modules/home/home_module.dart';
+import 'package:labs_challenge_front/src/shared/pages/app_splash_page.dart';
 import 'package:labs_challenge_front/src/shared/states/session_notifier.dart';
 import 'package:labs_challenge_front/src/shared_module.dart';
 
@@ -17,12 +18,9 @@ class AppModule extends Module {
 
   @override
   void routes(RouteManager r) {
-    r.module('/', module: AuthModule());
-    r.module(
-      '/home',
-      module: HomeModule(),
-      guards: [AuthGuard()],
-    );
+    r.child('/', child: (_) => const AppSplashPage());
+    r.module('/auth', module: AuthModule());
+    r.module('/home', module: HomeModule(), guards: [AuthGuard()]);
   }
 
   @override

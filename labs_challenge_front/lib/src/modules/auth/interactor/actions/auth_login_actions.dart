@@ -31,7 +31,7 @@ class AuthLoginActions extends StateNotifier<AuthLoginState> {
     },
   );
   }
-  
+    
   void reset() {
     notifySetState((state) => AuthLoginState.start());
   }

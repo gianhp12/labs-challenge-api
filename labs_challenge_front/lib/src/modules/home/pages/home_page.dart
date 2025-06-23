@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:labs_challenge_front/src/shared/widgets/app_bar.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:labs_challenge_front/src/modules/home/interactor/actions/home_actions.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,11 +10,63 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _actions = Modular.get<HomeActions>();
+
+  @override
+  void initState() {
+    _actions.getInfoUser();
+    super.initState();
+  }
+
+  void logout() {
+    _actions.logout();
+    Modular.to.navigate('/auth');
+  }
+
   @override
   Widget build(BuildContext context) {
+    final state = _actions.currentState;
     return Scaffold(
       backgroundColor: Colors.blue.shade50,
-      appBar: const AppAppBar(title: 'Logistica App'),
+      appBar: AppBar(
+        title: const Text('Logistica App'),
+        backgroundColor: Colors.blue,
+        actions: [
+          PopupMenuButton<int>(
+            icon: const Icon(Icons.account_circle, size: 30),
+            onSelected: (value) {
+              if (value == 1) {
+                logout();
+              }
+            },
+            itemBuilder:
+                (context) => [
+                  PopupMenuItem(
+                    value: 0,
+                    enabled: false,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.person, color: Colors.grey),
+                        const SizedBox(width: 8),
+                        Text(state.user!.name),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuDivider(),
+                  const PopupMenuItem(
+                    value: 1,
+                    child: Row(
+                      children: [
+                        Icon(Icons.logout, color: Colors.red),
+                        SizedBox(width: 8),
+                        Text("Sair"),
+                      ],
+                    ),
+                  ),
+                ],
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -60,7 +113,6 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 16),
-
             _buildDeliveryItem(
               title: 'Pedido #12345',
               subtitle: 'Em trânsito - São Paulo',
@@ -152,10 +204,7 @@ class _HomePageState extends State<HomePage> {
       ),
       child: ListTile(
         contentPadding: EdgeInsets.zero,
-        title: Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
         subtitle: Text(subtitle),
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

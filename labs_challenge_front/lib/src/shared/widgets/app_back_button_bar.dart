@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 class AppBackButtonBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
@@ -21,7 +22,7 @@ class AppBackButtonBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       leading: IconButton(
         icon: Icon(Icons.arrow_back, color: iconColor),
-        onPressed: onBack ?? () => Navigator.of(context).pop(),
+        onPressed: onBack ?? () => Modular.to.pop(),
       ),
       title:
           title != null

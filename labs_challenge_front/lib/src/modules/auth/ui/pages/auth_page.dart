@@ -177,7 +177,7 @@ class _AuthPageState extends State<AuthPage> {
                   child: AppButton(
                     label: 'Criar uma conta',
                     onPressed: () {
-                      Modular.to.pushNamed('/register');
+                      Modular.to.pushNamed('./register');
                     },
                     type: AppButtonType.outlined,
                     borderColor: Colors.blue.shade700,
