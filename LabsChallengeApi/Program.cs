@@ -13,15 +13,7 @@ builder.Services.AddAuthenticationJwt(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddHealthChecks();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
-});
+builder.Services.AddCorsConfiguration(builder.Configuration);
 Serilog.Debugging.SelfLog.Enable(msg => Console.Error.WriteLine("SERILOG SELFLOG: " + msg));
 SerilogLoggerFactory.ConfigureSerilog(builder.Configuration, builder.Environment);
 builder.Host.UseSerilog();
@@ -31,7 +23,7 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.UseCors("AllowAll");
+app.UseCors("LabsChallengeFront");
 await app.InitializeQueue();
 
 var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
