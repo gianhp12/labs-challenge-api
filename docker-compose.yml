@@ -11,13 +11,18 @@ services:
       sql-server-db:
         condition: service_started
       elasticsearch:
-        condition: service_healthy
+        condition: service_started
       rabbitmq:
-        condition: service_healthy
+        condition: service_started
       rabbit-init:
         condition: service_started
     ports:
       - "8081:8081"
+    command: [
+      "/wait-for-it.sh", "sql-server-db:1433",
+      "--", "/wait-for-it.sh", "rabbitmq:5672",
+      "--", "/wait-for-it.sh", "elasticsearch:9200",
+      "--", "dotnet", "LabsChallengeApi.dll" ]
     
   email-service-worker:
     build:

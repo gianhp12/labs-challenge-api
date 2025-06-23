@@ -40,8 +40,8 @@ class AuthModule extends Module {
       '/validate-token',
       child: (context) {
         final args = r.args.data as Map<String, dynamic>;
-        final email = args['email'];
-        return ValidateTokenPage(email: email);
+        final loggedUser = args['loggedUser'];
+        return ValidateTokenPage(loggedUser: loggedUser);
       },
       transition: TransitionType.fadeIn,
     );

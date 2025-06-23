@@ -35,7 +35,7 @@ class _RegisterPageState extends State<RegisterPage> with UseState{
       if (state is SuccessAuthRegisterState) {
         Modular.to.pushNamed<String?>(
           './validate-token',
-          arguments: {'email': _emailController.text},
+          arguments: {'loggedUser': state.loggedUser},
         );
       }
       setState(() {});

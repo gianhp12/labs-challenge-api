@@ -64,7 +64,7 @@ class _AuthPageState extends State<AuthPage> {
         }
         Modular.to.pushNamed<String?>(
           './validate-token',
-          arguments: {'email': state.loggedUser!.email},
+          arguments: {'loggedUser': state.loggedUser},
         );
       }
       setState(() {});
