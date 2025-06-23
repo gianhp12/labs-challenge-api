@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:labs_challenge_front/src/modules/auth/data/mappers/autenticated_user_mapper.dart';
-import 'package:labs_challenge_front/src/modules/auth/interactor/models/authenticated_user_model.dart';
 import 'package:labs_challenge_front/src/modules/auth/interactor/repositories/auth_repository.dart';
 import 'package:labs_challenge_front/src/shared/errors/app_error.dart';
 import 'package:labs_challenge_front/src/shared/errors/common_errors.dart';
+import 'package:labs_challenge_front/src/shared/models/logged_user.dart';
 import 'package:labs_challenge_front/src/shared/services/http_service/http_error.dart';
 import 'package:labs_challenge_front/src/shared/services/http_service/http_service.dart';
 import 'package:labs_challenge_front/src/shared/utils/api_routes.dart';
@@ -15,7 +15,7 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this._httpService);
 
   @override
-  AsyncResult<AuthenticatedUserModel, AppError> login(
+  AsyncResult<LoggedUser, AppError> login(
     String email,
     String password,
   ) async {
@@ -74,6 +74,62 @@ class AuthRepositoryImpl implements AuthRepository {
           errorMessage: "Ocorreu um erro interno na API",
           errorModule: 'auth',
           errorMethod: 'register',
+        ),
+      );
+    }
+  }
+
+  @override
+  AsyncResult<void, AppError> resendToken(String email) async {
+    try {
+      await _httpService.post(
+        ApiRoutes.resendEmailToken,
+        body: {"email": email},
+      );
+      return Success(1);
+    } on RemoteRequestError catch (ex) {
+      if (ex is BadRequest) {
+        return Failure(
+          ConnectionError(
+            errorMessage: ex.error!,
+            errorModule: 'auth',
+            errorMethod: 'resendToken',
+          ),
+        );
+      }
+      return Failure(
+        ConnectionError(
+          errorMessage: "Ocorreu um erro interno na API",
+          errorModule: 'auth',
+          errorMethod: 'resendToken',
+        ),
+      );
+    }
+  }
+
+  @override
+  AsyncResult<void, AppError> validateToken(String email, String token) async {
+    try {
+      await _httpService.post(
+        ApiRoutes.validateEmailToken,
+        body: {"email": email, "token": token},
+      );
+      return Success(1);
+    } on RemoteRequestError catch (ex) {
+      if (ex is BadRequest) {
+        return Failure(
+          ConnectionError(
+            errorMessage: ex.error!,
+            errorModule: 'auth',
+            errorMethod: 'validateToken',
+          ),
+        );
+      }
+      return Failure(
+        ConnectionError(
+          errorMessage: "Ocorreu um erro interno na API",
+          errorModule: 'auth',
+          errorMethod: 'validateToken',
         ),
       );
     }

@@ -1,8 +1,8 @@
-import 'package:labs_challenge_front/src/modules/auth/interactor/models/authenticated_user_model.dart';
+import 'package:labs_challenge_front/src/shared/models/logged_user.dart';
 
 class AutenticatedUserMapper {
-  static AuthenticatedUserModel fromMap(map) {
-    return AuthenticatedUserModel(
+  static LoggedUser fromMap(map) {
+    return LoggedUser(
       name: map["username"],
       email: map["email"],
       token: map["accessToken"],

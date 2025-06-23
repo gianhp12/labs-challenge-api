@@ -6,35 +6,52 @@ import 'package:labs_challenge_front/src/shared/states/session_notifier.dart';
 import 'package:labs_challenge_front/src/shared_module.dart';
 
 class AppModule extends Module {
+  final SessionNotifier sessionNotifier;
+
+  AppModule({required this.sessionNotifier});
+
   @override
   void binds(Injector i) {
-   
+    i.addInstance<SessionNotifier>(sessionNotifier);
   }
 
   @override
   void routes(RouteManager r) {
     r.module('/', module: AuthModule());
-    r.module('/home', module: HomeModule());
+    r.module(
+      '/home',
+      module: HomeModule(),
+      guards: [AuthGuard()],
+    );
   }
 
   @override
-  List<Module> get imports => [
-        SharedModule(),
-      ];
+  List<Module> get imports => [SharedModule()];
 }
 
 class AuthGuard extends RouteGuard {
   AuthGuard() : super(redirectTo: '/');
-  
+
   @override
   FutureOr<bool> canActivate(String path, ParallelRoute route) {
-    final session = Modular.routerDelegate.navigatorKey.currentContext!
-        .read<SessionNotifier>();
-    if (session.state.sessionExpired) {
-      session.logOut();
+    try {
+      final session = Modular.get<SessionNotifier>();
+      if (session.state.sessionExpired) {
+        session.setSessionMessage(
+          "Sua sessão expirou, por favor realize um novo login para continuar",
+        );
+        session.logOut();
+        return false;
+      }
+      if (session.state.loggedUser == null) {
+        session.setSessionMessage("Necessário efetuar o login para continuar");
+        session.logOut();
+        return false;
+      }
+      session.saveAccessedView(path);
+      return true;
+    } catch (e) {
       return false;
     }
-    session.saveAccessedView(path);
-    return true;
   }
 }

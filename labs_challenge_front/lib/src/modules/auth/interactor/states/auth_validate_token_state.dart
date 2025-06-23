@@ -15,7 +15,9 @@ sealed class AuthValidateTokenState extends AppState {
 
   AuthValidateTokenState setError(String error) => ErrorAuthValidateTokenState(exception: error);
 
-  AuthValidateTokenState setSuccess() => SuccessAuthValidateTokenState();
+  AuthValidateTokenState setSuccessValidateToken() => SuccessAuthValidateTokenState();
+  
+  AuthValidateTokenState setSuccessResendToken() => SuccessAuthValidateResendTokenState();
 }
 
 class StartAuthValidateTokenState extends AuthValidateTokenState {
@@ -32,4 +34,8 @@ class ErrorAuthValidateTokenState extends AuthValidateTokenState {
 
 class SuccessAuthValidateTokenState extends AuthValidateTokenState {
   SuccessAuthValidateTokenState({super.exception = '', super.loading = false});
+}
+
+class SuccessAuthValidateResendTokenState extends AuthValidateTokenState {
+  SuccessAuthValidateResendTokenState({super.exception = '', super.loading = false});
 }

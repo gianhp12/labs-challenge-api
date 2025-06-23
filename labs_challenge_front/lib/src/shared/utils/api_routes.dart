@@ -17,4 +17,6 @@ class ApiRoutes {
   static String get login => "${_getBaseUrl()}/api/v1/Auth/login";
   static String get validateEmailToken =>
       "${_getBaseUrl()}/api/v1/Auth/validate-email-token";
+  static String get resendEmailToken =>
+      "${_getBaseUrl()}/api/v1/Auth/resend-email-token";
 }

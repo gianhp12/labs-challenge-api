@@ -3,6 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:labs_challenge_front/src/modules/auth/interactor/actions/auth_login_actions.dart';
 import 'package:labs_challenge_front/src/modules/auth/interactor/states/auth_login_state.dart';
 import 'package:labs_challenge_front/src/modules/auth/ui/widgets/auth_container.dart';
+import 'package:labs_challenge_front/src/shared/states/session_notifier.dart';
 import 'package:labs_challenge_front/src/shared/utils/form_validators.dart';
 import 'package:labs_challenge_front/src/shared/widgets/app_button.dart';
 import 'package:labs_challenge_front/src/shared/widgets/app_text_form_field.dart';
@@ -20,19 +21,51 @@ class _AuthPageState extends State<AuthPage> {
   final _passwordController = TextEditingController();
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
-
   final _actions = Modular.get<AuthLoginActions>();
 
   @override
   void initState() {
     super.initState();
+    final session = Modular.get<SessionNotifier>();
+    final message = session.sessionMessage;
+    if (message != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.info, color: Colors.black),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    message,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.yellow,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            duration: const Duration(seconds: 3),
+            elevation: 6,
+          ),
+        );
+        session.clearSessionMessage();
+      });
+    }
     _actions.addListener(() {
       final state = _actions.currentState;
       if (state is GettedAuthLoginState) {
-        if (state.authenticatedUser!.isEmailConfirmed) {
+        if (state.loggedUser!.isEmailConfirmed) {
           return Modular.to.navigate('/home');
         }
-        Modular.to.navigate('/validate-token');
+        Modular.to.pushNamed<String?>(
+          './validate-token',
+          arguments: {'email': state.loggedUser!.email},
+        );
       }
       setState(() {});
     });

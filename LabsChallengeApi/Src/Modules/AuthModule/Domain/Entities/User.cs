@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using LabsChallengeApi.Src.Modules.AuthModule.Domain.VO;
 
 namespace LabsChallengeApi.Src.Modules.AuthModule.Domain.Entities;
@@ -58,7 +59,7 @@ public class User
             password: new Password(password),
             passwordHash: null,
             isEmailConfirmed: false,
-            emailConfirmationToken: Guid.NewGuid().ToString(),
+            emailConfirmationToken: RandomNumberGenerator.GetInt32(100000, 1000000).ToString(),
             emailTokenRequestedAt: DateTime.UtcNow
         );
     }

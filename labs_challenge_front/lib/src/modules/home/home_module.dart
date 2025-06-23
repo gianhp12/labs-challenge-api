@@ -4,6 +4,10 @@ import 'package:labs_challenge_front/src/shared_module.dart';
 
 class HomeModule extends Module {
   @override
+  void binds(Injector i) {
+  }
+
+  @override
   void routes(RouteManager r) {
     r.child(
       '/',

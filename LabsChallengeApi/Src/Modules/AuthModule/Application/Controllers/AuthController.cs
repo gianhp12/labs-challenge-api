@@ -83,11 +83,11 @@ namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
         }
 
         [HttpPost("resend-email-token")]
-        public async Task<IActionResult> ResendEmailToken([FromBody] string email)
+        public async Task<IActionResult> ResendEmailToken([FromBody] ResendEmailTokenInputDto dto)
         {
             try
             {
-                await _resendEmailTokenUsecase.ExecuteAsync(email);
+                await _resendEmailTokenUsecase.ExecuteAsync(dto.Email);
                 return Accepted();
             }
             catch (ValidationException ex)
@@ -98,7 +98,6 @@ namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
             {
                 return NotFound(ex.Message);
             }
-            
         }
     }
 }

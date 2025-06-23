@@ -4,6 +4,7 @@ import 'package:labs_challenge_front/src/modules/auth/interactor/actions/auth_re
 import 'package:labs_challenge_front/src/modules/auth/interactor/states/auth_register_state.dart';
 import 'package:labs_challenge_front/src/modules/auth/ui/widgets/auth_container.dart';
 import 'package:labs_challenge_front/src/modules/auth/ui/widgets/password_strength_indicator.dart';
+import 'package:labs_challenge_front/src/shared/hooks/use_state.dart';
 import 'package:labs_challenge_front/src/shared/utils/form_validators.dart';
 import 'package:labs_challenge_front/src/shared/widgets/app_button.dart';
 import 'package:labs_challenge_front/src/shared/widgets/app_text_form_field.dart';
@@ -15,7 +16,7 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends State<RegisterPage> with UseState{
   final _actions = Modular.get<AuthRegisterActions>();
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
@@ -32,7 +33,10 @@ class _RegisterPageState extends State<RegisterPage> {
      _actions.addListener(() {
       final state = _actions.currentState;
       if (state is SuccessAuthRegisterState) {
-        Modular.to.navigate('/validate-token');
+        Modular.to.pushNamed<String?>(
+          './validate-token',
+          arguments: {'email': _emailController.text},
+        );
       }
       setState(() {});
     });

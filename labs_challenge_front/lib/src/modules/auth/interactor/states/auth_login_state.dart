@@ -1,15 +1,15 @@
-import 'package:labs_challenge_front/src/modules/auth/interactor/models/authenticated_user_model.dart';
 import 'package:labs_challenge_front/src/shared/hooks/state_notifier.dart';
+import 'package:labs_challenge_front/src/shared/models/logged_user.dart';
 
 sealed class AuthLoginState extends AppState {
   final bool loading;
   final String exception;
-  final AuthenticatedUserModel? authenticatedUser;
+  final LoggedUser? loggedUser;
 
   AuthLoginState({
     required this.loading,
     required this.exception,
-    this.authenticatedUser,
+    this.loggedUser,
   });
 
   factory AuthLoginState.start() => StartAuthLoginState();
@@ -18,7 +18,7 @@ sealed class AuthLoginState extends AppState {
 
   AuthLoginState setError(String error) => ErrorAuthLoginState(exception: error);
   
-  AuthLoginState setAuthenticatedUser(AuthenticatedUserModel authenticatedUser) => GettedAuthLoginState(authenticatedUser: authenticatedUser);
+  AuthLoginState setLoggedUser(LoggedUser loggedUser) => GettedAuthLoginState(loggedUser: loggedUser);
 }
 
 class StartAuthLoginState extends AuthLoginState {
@@ -35,7 +35,7 @@ class ErrorAuthLoginState extends AuthLoginState {
 
 class GettedAuthLoginState extends AuthLoginState {
   GettedAuthLoginState({
-    required super.authenticatedUser,
+    required super.loggedUser,
     super.exception = '',
     super.loading = false,
   });

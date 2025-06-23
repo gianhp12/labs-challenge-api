@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart';
-import 'package:labs_challenge_front/src/shared/errors/common_errors.dart';
 import 'package:labs_challenge_front/src/shared/services/http_service/http_error.dart';
 import 'package:labs_challenge_front/src/shared/services/http_service/http_respose_model.dart';
 import 'package:labs_challenge_front/src/shared/states/session_notifier.dart';
@@ -24,9 +24,8 @@ sealed class HttpService {
 
 class HttpServiceImpl implements HttpService {
   final Client _http;
-  final SessionNotifier _sessionNotifier;
 
-  HttpServiceImpl(this._http, this._sessionNotifier);
+  HttpServiceImpl(this._http);
 
   @override
   Future<HttpResponse> get(String url, {Map<String, String>? headers}) async {
@@ -127,11 +126,8 @@ class HttpServiceImpl implements HttpService {
     }
   }
 
-  Exception? _verifyHttpError(
-    int statusCode,
-    String? body,
-    String request,
-  ) {
+  Exception? _verifyHttpError(int statusCode, String? body, String request) {
+    final session = Modular.get<SessionNotifier>();
     switch (statusCode) {
       case 422:
         return UnprocessableEntity(error: body, bodyRequest: request);
@@ -142,7 +138,7 @@ class HttpServiceImpl implements HttpService {
       case 403:
         return Forbidden(error: body, bodyRequest: request);
       case 401:
-        _sessionNotifier.setSessionExpired(true);
+        session.setSessionExpired(true);
         return Unauthorized(error: body, bodyRequest: request);
       case 503:
         return ServiceUnavaliable(error: body, bodyRequest: request);

@@ -6,6 +6,7 @@ class AppButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String label;
   final bool isLoading;
+  final bool isSuccess;
   final AppButtonType type;
   final Color backgroundColor;
   final Color borderColor;
@@ -21,6 +22,7 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     required this.label,
     this.isLoading = false,
+    this.isSuccess = false,
     this.type = AppButtonType.elevated,
     this.backgroundColor = Colors.blue,
     this.borderColor = Colors.blue,
@@ -34,7 +36,9 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final child = isLoading
+    final bool shouldDisable = isLoading || isSuccess;
+
+    final Widget child = isLoading
         ? SizedBox(
             width: 24,
             height: 24,
@@ -43,14 +47,21 @@ class AppButton extends StatelessWidget {
               strokeWidth: 2.5,
             ),
           )
-        : Text(
-            label,
-            style: TextStyle(
-              fontSize: fontSize,
-              color: textColor,
-              fontWeight: FontWeight.w600,
-            ),
-          );
+        : isSuccess
+            ? const Icon(
+                Icons.check_circle,
+                color: Colors.white,
+                size: 24,
+              )
+            : Text(
+                label,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  color: type == AppButtonType.outlined ? borderColor : textColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              );
+
     final ButtonStyle style;
     if (type == AppButtonType.outlined) {
       style = OutlinedButton.styleFrom(
@@ -59,32 +70,40 @@ class AppButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),
         ),
-        foregroundColor: textColor,
+        foregroundColor: borderColor,
       );
     } else {
       style = ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor,
+        backgroundColor: isSuccess ? Colors.green : backgroundColor,
+        foregroundColor: textColor,
         padding: padding,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),
         ),
       );
     }
-    final button = type == AppButtonType.outlined
+
+    final VoidCallback? safeOnPressed = shouldDisable ? () {} : onPressed;
+
+    final Widget button = type == AppButtonType.outlined
         ? OutlinedButton(
-            onPressed: isLoading ? null : onPressed,
+            onPressed: safeOnPressed,
             style: style,
             child: child,
           )
         : ElevatedButton(
-            onPressed: isLoading ? null : onPressed,
+            onPressed: safeOnPressed,
             style: style,
             child: child,
           );
-    return SizedBox(
-      width: width,
-      height: height,
-      child: button,
+
+    return AbsorbPointer(
+      absorbing: shouldDisable,
+      child: SizedBox(
+        width: width,
+        height: height,
+        child: button,
+      ),
     );
   }
 }
