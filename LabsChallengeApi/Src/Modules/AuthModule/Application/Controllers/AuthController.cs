@@ -38,7 +38,7 @@ namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterUserInputDto dto)
         {
             await _registerUserUsecase.ExecuteAsync(dto);
-            return Created();
+            return NoContent();
         }
 
         [HttpPost("validate-email-token")]
