@@ -26,7 +26,11 @@ class AuthValidateTokenActions extends StateNotifier<AuthValidateTokenState> {
     );
   }
 
-  Future<void> validateToken(String email, String password, String token) async {
+  Future<void> validateToken(
+    String email,
+    String password,
+    String token,
+  ) async {
     final session = Modular.get<SessionNotifier>();
     notifySetState((state) => state.setLoading());
     var result = await _repository.validateToken(email, token);

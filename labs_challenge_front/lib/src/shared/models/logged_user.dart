@@ -19,17 +19,17 @@ class LoggedUser {
       'name': name,
       'email': email,
       'expiresIn': expiresIn,
-      'isEmailConfirmed': isEmailConfirmed
+      'isEmailConfirmed': isEmailConfirmed,
     };
   }
 
   factory LoggedUser.fromMap(Map<String, dynamic> map) {
-  return LoggedUser(
-    token: map['token'] ?? '',
-    name: map['name'] ?? '',
-    email: map['email'] ?? '',
-    expiresIn: map['expiresIn'] ?? 0,
-    isEmailConfirmed: map['isEmailConfirmed'] ?? false,
-  );
-}
+    return LoggedUser(
+      token: map['token'] ?? '',
+      name: map['name'] ?? '',
+      email: map['email'] ?? '',
+      expiresIn: map['expiresIn'] ?? 0,
+      isEmailConfirmed: map['isEmailConfirmed'] ?? false,
+    );
+  }
 }

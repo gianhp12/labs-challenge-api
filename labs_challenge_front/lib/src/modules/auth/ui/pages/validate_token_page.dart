@@ -26,13 +26,12 @@ class _ValidateTokenPageState extends State<ValidateTokenPage> with UseState {
   final _formKey = GlobalKey<FormState>();
   final _tokenController = TextEditingController();
   final _tokenFocus = FocusNode();
-
   bool isLoading = false;
   String? errorMessage;
 
   @override
   void initState() {
-    _actions.addListener(() async{
+    _actions.addListener(() async {
       final state = _actions.currentState;
       if (state is SuccessAuthValidateTokenState) {
         Modular.to.navigate('/home');

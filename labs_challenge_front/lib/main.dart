@@ -10,5 +10,7 @@ void main() async {
   flavor = Flavor.prod;
   final session = SessionNotifier();
   await session.loadSession();
-  runApp(ModularApp(module: AppModule(sessionNotifier: session), child: AppWidget()));
+  runApp(
+    ModularApp(module: AppModule(sessionNotifier: session), child: AppWidget()),
+  );
 }

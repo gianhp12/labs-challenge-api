@@ -45,7 +45,10 @@ class _AuthPageState extends State<AuthPage> with UseState {
         }
         Modular.to.pushNamed<String?>(
           './validate-token',
-          arguments: {'email': _emailController.text, 'password': _passwordController.text},
+          arguments: {
+            'email': _emailController.text,
+            'password': _passwordController.text,
+          },
         );
       }
       setState(() {});

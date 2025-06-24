@@ -16,9 +16,11 @@ sealed class AuthLoginState extends AppState {
 
   AuthLoginState setLoading() => LoadingAuthLoginState(loading: true);
 
-  AuthLoginState setError(String error) => ErrorAuthLoginState(exception: error);
-  
-  AuthLoginState setLoggedUser(LoggedUser loggedUser) => GettedAuthLoginState(loggedUser: loggedUser);
+  AuthLoginState setError(String error) =>
+      ErrorAuthLoginState(exception: error);
+
+  AuthLoginState setLoggedUser(LoggedUser loggedUser) =>
+      GettedAuthLoginState(loggedUser: loggedUser);
 }
 
 class StartAuthLoginState extends AuthLoginState {

@@ -4,20 +4,21 @@ sealed class AuthValidateTokenState extends AppState {
   final bool loading;
   final String exception;
 
-  AuthValidateTokenState({
-    required this.loading,
-    required this.exception,
-  });
+  AuthValidateTokenState({required this.loading, required this.exception});
 
   factory AuthValidateTokenState.start() => StartAuthValidateTokenState();
 
-  AuthValidateTokenState setLoading() => LoadingAuthValidateTokenState(loading: true);
+  AuthValidateTokenState setLoading() =>
+      LoadingAuthValidateTokenState(loading: true);
 
-  AuthValidateTokenState setError(String error) => ErrorAuthValidateTokenState(exception: error);
+  AuthValidateTokenState setError(String error) =>
+      ErrorAuthValidateTokenState(exception: error);
 
-  AuthValidateTokenState setSuccessValidateToken() => SuccessAuthValidateTokenState();
-  
-  AuthValidateTokenState setSuccessResendToken() => SuccessAuthValidateResendTokenState();
+  AuthValidateTokenState setSuccessValidateToken() =>
+      SuccessAuthValidateTokenState();
+
+  AuthValidateTokenState setSuccessResendToken() =>
+      SuccessAuthValidateResendTokenState();
 }
 
 class StartAuthValidateTokenState extends AuthValidateTokenState {
@@ -29,7 +30,10 @@ class LoadingAuthValidateTokenState extends AuthValidateTokenState {
 }
 
 class ErrorAuthValidateTokenState extends AuthValidateTokenState {
-  ErrorAuthValidateTokenState({required super.exception, super.loading = false});
+  ErrorAuthValidateTokenState({
+    required super.exception,
+    super.loading = false,
+  });
 }
 
 class SuccessAuthValidateTokenState extends AuthValidateTokenState {
@@ -37,5 +41,8 @@ class SuccessAuthValidateTokenState extends AuthValidateTokenState {
 }
 
 class SuccessAuthValidateResendTokenState extends AuthValidateTokenState {
-  SuccessAuthValidateResendTokenState({super.exception = '', super.loading = false});
+  SuccessAuthValidateResendTokenState({
+    super.exception = '',
+    super.loading = false,
+  });
 }

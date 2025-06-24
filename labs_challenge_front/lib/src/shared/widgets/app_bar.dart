@@ -43,7 +43,7 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
         if (showLogout)
           IconButton(
             tooltip: 'Sair',
-            icon: const Icon(Icons.logout, color: Colors.red, size: 25,),
+            icon: const Icon(Icons.logout, color: Colors.red, size: 25),
             onPressed: () {
               Modular.to.navigate('/');
             },

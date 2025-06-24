@@ -38,29 +38,26 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool shouldDisable = isLoading || isSuccess;
 
-    final Widget child = isLoading
-        ? SizedBox(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator(
-              color: type == AppButtonType.outlined ? borderColor : textColor,
-              strokeWidth: 2.5,
-            ),
-          )
-        : isSuccess
-            ? const Icon(
-                Icons.check_circle,
-                color: Colors.white,
-                size: 24,
-              )
+    final Widget child =
+        isLoading
+            ? SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                color: type == AppButtonType.outlined ? borderColor : textColor,
+                strokeWidth: 2.5,
+              ),
+            )
+            : isSuccess
+            ? const Icon(Icons.check_circle, color: Colors.white, size: 24)
             : Text(
-                label,
-                style: TextStyle(
-                  fontSize: fontSize,
-                  color: type == AppButtonType.outlined ? borderColor : textColor,
-                  fontWeight: FontWeight.w600,
-                ),
-              );
+              label,
+              style: TextStyle(
+                fontSize: fontSize,
+                color: type == AppButtonType.outlined ? borderColor : textColor,
+                fontWeight: FontWeight.w600,
+              ),
+            );
 
     final ButtonStyle style;
     if (type == AppButtonType.outlined) {
@@ -85,25 +82,22 @@ class AppButton extends StatelessWidget {
 
     final VoidCallback? safeOnPressed = shouldDisable ? () {} : onPressed;
 
-    final Widget button = type == AppButtonType.outlined
-        ? OutlinedButton(
-            onPressed: safeOnPressed,
-            style: style,
-            child: child,
-          )
-        : ElevatedButton(
-            onPressed: safeOnPressed,
-            style: style,
-            child: child,
-          );
+    final Widget button =
+        type == AppButtonType.outlined
+            ? OutlinedButton(
+              onPressed: safeOnPressed,
+              style: style,
+              child: child,
+            )
+            : ElevatedButton(
+              onPressed: safeOnPressed,
+              style: style,
+              child: child,
+            );
 
     return AbsorbPointer(
       absorbing: shouldDisable,
-      child: SizedBox(
-        width: width,
-        height: height,
-        child: button,
-      ),
+      child: SizedBox(width: width, height: height, child: button),
     );
   }
 }

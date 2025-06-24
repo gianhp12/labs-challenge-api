@@ -19,7 +19,7 @@ class HomeActions extends StateNotifier<HomeState> {
     notifySetState((state) => state.setUser(user!));
   }
 
-  void setSessionMessage(String message) async{
+  void setSessionMessage(String message) async {
     final session = Modular.get<SessionNotifier>();
     session.setSessionMessage(message);
   }

@@ -39,7 +39,7 @@ class AuthGuard extends RouteGuard {
         return false;
       }
       if (session.state.loggedUser == null) {
-        session.logOut("Necessário fazer o login para continuar" , false);
+        session.logOut("Necessário fazer o login para continuar", false);
         return false;
       }
       session.saveAccessedView(path);

@@ -9,18 +9,14 @@ class AuthRegisterActions extends StateNotifier<AuthRegisterState> {
 
   Future<void> register(String username, String email, String password) async {
     notifySetState((state) => state.setLoading());
-    final result = await _repository.register(
-      username,
-      email,
-      password,
-    );
+    final result = await _repository.register(username, email, password);
     result.fold(
-      (success){
-            notifySetState((state) => state.setSuccess());
-          },
-          (failure) {
-            notifySetState((state) => state.setError(failure.errorMessage));
-          },
-        );
+      (success) {
+        notifySetState((state) => state.setSuccess());
+      },
+      (failure) {
+        notifySetState((state) => state.setError(failure.errorMessage));
+      },
+    );
   }
 }

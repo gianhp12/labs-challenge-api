@@ -15,8 +15,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _actions.getInfoUser();
-    if (_actions.currentState.user != null && !_actions.currentState.user!.isEmailConfirmed) {
-      _actions.logout("Cadastro pendente de confirmação, por favor verifique o token enviado ao email de cadastro", false);
+    if (_actions.currentState.user != null &&
+        !_actions.currentState.user!.isEmailConfirmed) {
+      _actions.logout(
+        "Cadastro pendente de confirmação, por favor verifique o token enviado ao email de cadastro",
+        false,
+      );
     }
     super.initState();
   }

@@ -4,10 +4,7 @@ sealed class AuthRegisterState extends AppState {
   final bool loading;
   final String exception;
 
-  AuthRegisterState({
-    required this.loading,
-    required this.exception,
-  });
+  AuthRegisterState({required this.loading, required this.exception});
 
   factory AuthRegisterState.start() => StartAuthRegisterState();
 
@@ -32,8 +29,5 @@ class ErrorAuthRegisterState extends AuthRegisterState {
 }
 
 class SuccessAuthRegisterState extends AuthRegisterState {
-  SuccessAuthRegisterState({
-    super.exception = '',
-    super.loading = false,
-  });
+  SuccessAuthRegisterState({super.exception = '', super.loading = false});
 }
