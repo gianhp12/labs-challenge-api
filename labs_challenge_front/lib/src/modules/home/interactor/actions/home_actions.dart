@@ -6,9 +6,10 @@ import 'package:labs_challenge_front/src/shared/states/session_notifier.dart';
 class HomeActions extends StateNotifier<HomeState> {
   HomeActions() : super(HomeState.start());
 
-  void logout() async {
+  void logout(String? message, bool isSuccess) async {
     final session = Modular.get<SessionNotifier>();
-    session.logOut();
+    session.logOut(message, isSuccess);
+    Modular.to.navigate('/');
   }
 
   void getInfoUser() async {
@@ -16,5 +17,10 @@ class HomeActions extends StateNotifier<HomeState> {
     final session = Modular.get<SessionNotifier>();
     var user = session.state.loggedUser;
     notifySetState((state) => state.setUser(user!));
+  }
+
+  void setSessionMessage(String message) async{
+    final session = Modular.get<SessionNotifier>();
+    session.setSessionMessage(message);
   }
 }

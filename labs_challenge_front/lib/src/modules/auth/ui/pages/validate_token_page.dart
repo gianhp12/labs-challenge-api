@@ -4,14 +4,18 @@ import 'package:labs_challenge_front/src/modules/auth/interactor/actions/auth_va
 import 'package:labs_challenge_front/src/modules/auth/interactor/states/auth_validate_token_state.dart';
 import 'package:labs_challenge_front/src/modules/auth/ui/widgets/auth_container.dart';
 import 'package:labs_challenge_front/src/shared/hooks/use_state.dart';
-import 'package:labs_challenge_front/src/shared/models/logged_user.dart';
 import 'package:labs_challenge_front/src/shared/utils/form_validators.dart';
 import 'package:labs_challenge_front/src/shared/widgets/app_button.dart';
 import 'package:labs_challenge_front/src/shared/widgets/app_text_form_field.dart';
 
 class ValidateTokenPage extends StatefulWidget {
-  final LoggedUser loggedUser;
-  const ValidateTokenPage({super.key, required this.loggedUser});
+  final String email;
+  final String password;
+  const ValidateTokenPage({
+    super.key,
+    required this.email,
+    required this.password,
+  });
 
   @override
   State<ValidateTokenPage> createState() => _ValidateTokenPageState();
@@ -28,10 +32,10 @@ class _ValidateTokenPageState extends State<ValidateTokenPage> with UseState {
 
   @override
   void initState() {
-   _actions.addListener(() {
+    _actions.addListener(() async{
       final state = _actions.currentState;
       if (state is SuccessAuthValidateTokenState) {
-          Modular.to.navigate('/home');
+        Modular.to.navigate('/home');
       }
       setState(() {});
     });
@@ -64,7 +68,7 @@ class _ValidateTokenPageState extends State<ValidateTokenPage> with UseState {
           child: AuthContainer(
             subtitle:
                 "Informe o token recebido no email para validar seu cadastro.",
-            showBackButton: true,
+            showBackButton: false,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -84,7 +88,7 @@ class _ValidateTokenPageState extends State<ValidateTokenPage> with UseState {
                       isLoading
                           ? null
                           : () async {
-                            await _actions.resendToken(widget.loggedUser.email);
+                            await _actions.resendToken(widget.email);
                           },
                   child: Text(
                     'Reenviar token',
@@ -102,11 +106,11 @@ class _ValidateTokenPageState extends State<ValidateTokenPage> with UseState {
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         await _actions.validateToken(
-                          widget.loggedUser.email,
+                          widget.email,
+                          widget.password,
                           _tokenController.text,
                         );
                       }
-                      await Future.delayed(const Duration(seconds: 2));
                     },
                   ),
                 ),

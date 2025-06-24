@@ -13,25 +13,25 @@ class AuthLoginActions extends StateNotifier<AuthLoginState> {
   AuthLoginActions(this._repository) : super(AuthLoginState.start());
 
   Future<void> login(String email, String password) async {
-  final session = Modular.get<SessionNotifier>();
-  notifySetState((state) => state.setLoading());
-  final result = await _repository.login(email, password);
-  result.fold(
-    (success) async {
-      final loggedUser = success;
-      session.logIn(loggedUser);
-      
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('logged_user', jsonEncode(loggedUser.toMap()));
-
-      notifySetState((state) => state.setLoggedUser(loggedUser));
-    },
-    (failure) {
-      notifySetState((state) => state.setError(failure.errorMessage));
-    },
-  );
+    final session = Modular.get<SessionNotifier>();
+    notifySetState((state) => state.setLoading());
+    final result = await _repository.login(email, password);
+    result.fold(
+      (success) async {
+        final loggedUser = success;
+        if (loggedUser.isEmailConfirmed) {
+          session.logIn(loggedUser);
+          final prefs = await SharedPreferences.getInstance();
+          prefs.setString('logged_user', jsonEncode(loggedUser.toMap()));
+        }
+        notifySetState((state) => state.setLoggedUser(loggedUser));
+      },
+      (failure) {
+        notifySetState((state) => state.setError(failure.errorMessage));
+      },
+    );
   }
-    
+
   void reset() {
     notifySetState((state) => AuthLoginState.start());
   }

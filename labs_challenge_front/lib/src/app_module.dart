@@ -35,15 +35,11 @@ class AuthGuard extends RouteGuard {
     try {
       final session = Modular.get<SessionNotifier>();
       if (session.state.sessionExpired) {
-        session.setSessionMessage(
-          "Sua sessão expirou, por favor realize um novo login para continuar",
-        );
-        session.logOut();
+        session.logOut("Sua sessão expirou realize um novo login", false);
         return false;
       }
       if (session.state.loggedUser == null) {
-        session.setSessionMessage("Necessário efetuar o login para continuar");
-        session.logOut();
+        session.logOut("Necessário fazer o login para continuar" , false);
         return false;
       }
       session.saveAccessedView(path);

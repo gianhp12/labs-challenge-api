@@ -11,17 +11,15 @@ import 'package:labs_challenge_front/src/shared/states/session_notifier.dart';
 import 'package:labs_challenge_front/src/shared_module.dart';
 
 class AuthModule extends Module {
-  
   final session = Modular.get<SessionNotifier>();
   @override
   void binds(Injector i) {
     //ACTIONS
-     i.add<AuthLoginActions>(AuthLoginActions.new);
-     i.add<AuthRegisterActions>(AuthRegisterActions.new);
-     i.add<AuthValidateTokenActions>(AuthValidateTokenActions.new);
-     //REPOSITORIES
-     i.add<AuthRepository>(
-        AuthRepositoryImpl.new);
+    i.add<AuthLoginActions>(AuthLoginActions.new);
+    i.add<AuthRegisterActions>(AuthRegisterActions.new);
+    i.add<AuthValidateTokenActions>(AuthValidateTokenActions.new);
+    //REPOSITORIES
+    i.add<AuthRepository>(AuthRepositoryImpl.new);
   }
 
   @override
@@ -40,8 +38,9 @@ class AuthModule extends Module {
       '/validate-token',
       child: (context) {
         final args = r.args.data as Map<String, dynamic>;
-        final loggedUser = args['loggedUser'];
-        return ValidateTokenPage(loggedUser: loggedUser);
+        final email = args['email'];
+        final password = args['password'];
+        return ValidateTokenPage(email: email, password: password);
       },
       transition: TransitionType.fadeIn,
     );

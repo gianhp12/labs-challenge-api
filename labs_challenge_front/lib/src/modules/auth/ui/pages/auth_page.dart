@@ -3,9 +3,11 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:labs_challenge_front/src/modules/auth/interactor/actions/auth_login_actions.dart';
 import 'package:labs_challenge_front/src/modules/auth/interactor/states/auth_login_state.dart';
 import 'package:labs_challenge_front/src/modules/auth/ui/widgets/auth_container.dart';
+import 'package:labs_challenge_front/src/shared/hooks/use_state.dart';
 import 'package:labs_challenge_front/src/shared/states/session_notifier.dart';
 import 'package:labs_challenge_front/src/shared/utils/form_validators.dart';
 import 'package:labs_challenge_front/src/shared/widgets/app_button.dart';
+import 'package:labs_challenge_front/src/shared/widgets/app_snack_bar.dart';
 import 'package:labs_challenge_front/src/shared/widgets/app_text_form_field.dart';
 
 class AuthPage extends StatefulWidget {
@@ -15,7 +17,7 @@ class AuthPage extends StatefulWidget {
   State<AuthPage> createState() => _AuthPageState();
 }
 
-class _AuthPageState extends State<AuthPage> {
+class _AuthPageState extends State<AuthPage> with UseState {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -27,33 +29,12 @@ class _AuthPageState extends State<AuthPage> {
   void initState() {
     super.initState();
     final session = Modular.get<SessionNotifier>();
-    final message = session.sessionMessage;
-    if (message != null) {
+    if (session.sessionMessage != null) {
+      final message = session.sessionMessage;
+      final isSuccess = session.isMessageSuccess;
+      session.clearSessionMessage();
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.info, color: Colors.black),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    message,
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                ),
-              ],
-            ),
-            backgroundColor: Colors.yellow,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            duration: const Duration(seconds: 3),
-            elevation: 6,
-          ),
-        );
-        session.clearSessionMessage();
+        showCustomSnackBar(context, message!, isSuccess!);
       });
     }
     _actions.addListener(() {
@@ -64,7 +45,7 @@ class _AuthPageState extends State<AuthPage> {
         }
         Modular.to.pushNamed<String?>(
           './validate-token',
-          arguments: {'loggedUser': state.loggedUser},
+          arguments: {'email': _emailController.text, 'password': _passwordController.text},
         );
       }
       setState(() {});
@@ -98,6 +79,22 @@ class _AuthPageState extends State<AuthPage> {
     _passwordFocus.dispose();
     _actions.removeListener(() {});
     super.dispose();
+  }
+
+  void showCustomSnackBar(
+    BuildContext context,
+    String message,
+    bool isSuccess,
+  ) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        elevation: 6,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        backgroundColor: Colors.transparent,
+        content: AppSnackBar(message: message, isSuccess: isSuccess),
+      ),
+    );
   }
 
   @override

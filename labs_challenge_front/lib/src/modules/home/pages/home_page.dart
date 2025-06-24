@@ -15,12 +15,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _actions.getInfoUser();
+    if (_actions.currentState.user != null && !_actions.currentState.user!.isEmailConfirmed) {
+      _actions.logout("Cadastro pendente de confirmação, por favor verifique o token enviado ao email de cadastro", false);
+    }
     super.initState();
-  }
-
-  void logout() {
-    _actions.logout();
-    Modular.to.navigate('/auth');
   }
 
   @override
@@ -36,7 +34,7 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.account_circle, size: 30),
             onSelected: (value) {
               if (value == 1) {
-                logout();
+                _actions.logout("Logout efetuado com sucesso", true);
               }
             },
             itemBuilder:

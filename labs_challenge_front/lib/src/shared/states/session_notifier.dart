@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SessionNotifier extends ChangeNotifier {
   SessionState _state = SessionState();
   String? sessionMessage;
+  bool? isMessageSuccess;
   SessionState get state => _state;
 
   void logIn(LoggedUser user) {
@@ -16,15 +17,12 @@ class SessionNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void logOut() async {
+  void logOut(String? message, bool isSuccess) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('logged_user');
-    _state = _state.copyWith(
-      loggedUser: null,
-      sessionExpired: false,
-      viewsVisited: [],
-    );
-    sessionMessage = null;
+    _state = SessionState();
+    sessionMessage = message;
+    isMessageSuccess = isSuccess;
     notifyListeners();
   }
 

@@ -16,7 +16,7 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> with UseState{
+class _RegisterPageState extends State<RegisterPage> with UseState {
   final _actions = Modular.get<AuthRegisterActions>();
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
@@ -30,12 +30,15 @@ class _RegisterPageState extends State<RegisterPage> with UseState{
   @override
   void initState() {
     super.initState();
-     _actions.addListener(() {
+    _actions.addListener(() {
       final state = _actions.currentState;
       if (state is SuccessAuthRegisterState) {
         Modular.to.pushNamed<String?>(
           './validate-token',
-          arguments: {'loggedUser': state.loggedUser},
+          arguments: {
+            'email': _emailController.text,
+            'password': _passwordController.text,
+          },
         );
       }
       setState(() {});
@@ -65,7 +68,8 @@ class _RegisterPageState extends State<RegisterPage> with UseState{
   Widget build(BuildContext context) {
     final state = _actions.currentState;
     final isLoading = state is LoadingAuthRegisterState;
-    final errorMessage = (state is ErrorAuthRegisterState) ? state.exception : null;
+    final errorMessage =
+        (state is ErrorAuthRegisterState) ? state.exception : null;
     return Scaffold(
       backgroundColor: Colors.blue.shade50,
       body: Center(
@@ -83,9 +87,7 @@ class _RegisterPageState extends State<RegisterPage> with UseState{
                   icon: Icons.person_outline,
                   focusNode: _nameFocus,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator:
-                      (value) =>
-                          FormValidators.nameValidator(value),
+                  validator: (value) => FormValidators.nameValidator(value),
                 ),
                 const SizedBox(height: 20),
                 AppTextFormField(

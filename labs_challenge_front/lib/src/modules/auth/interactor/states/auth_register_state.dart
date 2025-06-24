@@ -1,15 +1,12 @@
 import 'package:labs_challenge_front/src/shared/hooks/state_notifier.dart';
-import 'package:labs_challenge_front/src/shared/models/logged_user.dart';
 
 sealed class AuthRegisterState extends AppState {
   final bool loading;
   final String exception;
-  final LoggedUser? loggedUser;
 
   AuthRegisterState({
     required this.loading,
     required this.exception,
-    this.loggedUser,
   });
 
   factory AuthRegisterState.start() => StartAuthRegisterState();
@@ -19,7 +16,7 @@ sealed class AuthRegisterState extends AppState {
   AuthRegisterState setError(String error) =>
       ErrorAuthRegisterState(exception: error);
 
-  AuthRegisterState setSuccess(LoggedUser loggedUser) => SuccessAuthRegisterState(loggedUser: loggedUser);
+  AuthRegisterState setSuccess() => SuccessAuthRegisterState();
 }
 
 class StartAuthRegisterState extends AuthRegisterState {
@@ -36,7 +33,6 @@ class ErrorAuthRegisterState extends AuthRegisterState {
 
 class SuccessAuthRegisterState extends AuthRegisterState {
   SuccessAuthRegisterState({
-    required super.loggedUser,
     super.exception = '',
     super.loading = false,
   });

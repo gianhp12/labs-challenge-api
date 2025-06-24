@@ -18,7 +18,8 @@ class _AppSplashPageState extends State<AppSplashPage> {
 
   void _checkSession() async {
     final session = Modular.get<SessionNotifier>();
-    if (session.state.loggedUser != null) {
+    final loggedUser = session.state.loggedUser;
+    if (loggedUser != null && loggedUser.isEmailConfirmed) {
       Modular.to.navigate('/home');
     } else {
       Modular.to.navigate('/auth');
