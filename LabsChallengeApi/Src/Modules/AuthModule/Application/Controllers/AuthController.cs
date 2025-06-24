@@ -1,6 +1,5 @@
 using LabsChallengeApi.Src.Modules.AuthModule.Application.Dtos.Input;
 using LabsChallengeApi.Src.Modules.AuthModule.Application.Usecases;
-using LabsChallengeApi.Src.Shared.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
@@ -31,73 +30,29 @@ namespace LabsChallengeApi.Src.Modules.AuthModule.Application.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Auth([FromBody] AuthenticateInputDto dto)
         {
-            try
-            {
-                var result = await _authenticateUserUsecase.ExecuteAsync(dto);
-                return Ok(result);
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            var result = await _authenticateUserUsecase.ExecuteAsync(dto);
+            return Ok(result);
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserInputDto dto)
         {
-            try
-            {
-                await _registerUserUsecase.ExecuteAsync(dto);
-                return Created();
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            await _registerUserUsecase.ExecuteAsync(dto);
+            return Created();
         }
 
         [HttpPost("validate-email-token")]
         public async Task<IActionResult> ValidateEmailToken([FromBody] ValidateEmailTokenInputDto dto)
         {
-            try
-            {
-                await _validateEmailTokenUseCase.ExecuteAsync(dto);
-                return Ok();
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            await _validateEmailTokenUseCase.ExecuteAsync(dto);
+            return Ok();
         }
 
         [HttpPost("resend-email-token")]
         public async Task<IActionResult> ResendEmailToken([FromBody] ResendEmailTokenInputDto dto)
         {
-            try
-            {
-                await _resendEmailTokenUsecase.ExecuteAsync(dto.Email);
-                return Accepted();
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            await _resendEmailTokenUsecase.ExecuteAsync(dto.Email);
+            return Accepted();
         }
     }
 }

@@ -76,13 +76,12 @@ services:
       start_period: 30s
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.18.2
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - xpack.security.enrollment.enabled=false
-      - ES_JAVA_OPTS=-Xms1g -Xmx1g
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -96,7 +95,7 @@ services:
       start_period: 20s
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:9.0.2
+    image: docker.elastic.co/kibana/kibana:8.18.2
     container_name: kibana
     ports:
       - "5601:5601"

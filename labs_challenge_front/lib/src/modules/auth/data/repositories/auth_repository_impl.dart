@@ -15,10 +15,7 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this._httpService);
 
   @override
-  AsyncResult<LoggedUser, AppError> login(
-    String email,
-    String password,
-  ) async {
+  AsyncResult<LoggedUser, AppError> login(String email, String password) async {
     try {
       final result = await _httpService.post(
         ApiRoutes.login,
@@ -29,9 +26,11 @@ class AuthRepositoryImpl implements AuthRepository {
       return Success(authenticatedUser);
     } on RemoteRequestError catch (ex) {
       if (ex is BadRequest || ex is NotFound) {
+        final errorData = jsonDecode(ex.error!);
+        final message = errorData['Message'];
         return Failure(
           ConnectionError(
-            errorMessage: ex.error!,
+            errorMessage: message,
             errorModule: 'auth',
             errorMethod: 'login',
           ),
@@ -61,9 +60,11 @@ class AuthRepositoryImpl implements AuthRepository {
       return Success(1);
     } on RemoteRequestError catch (ex) {
       if (ex is BadRequest) {
+        final errorData = jsonDecode(ex.error!);
+        final message = errorData['Message'];
         return Failure(
           ConnectionError(
-            errorMessage: ex.error!,
+            errorMessage: message,
             errorModule: 'auth',
             errorMethod: 'register',
           ),
@@ -89,9 +90,11 @@ class AuthRepositoryImpl implements AuthRepository {
       return Success(1);
     } on RemoteRequestError catch (ex) {
       if (ex is BadRequest) {
+        final errorData = jsonDecode(ex.error!);
+        final message = errorData['Message'];
         return Failure(
           ConnectionError(
-            errorMessage: ex.error!,
+            errorMessage: message!,
             errorModule: 'auth',
             errorMethod: 'resendToken',
           ),
@@ -117,9 +120,11 @@ class AuthRepositoryImpl implements AuthRepository {
       return Success(1);
     } on RemoteRequestError catch (ex) {
       if (ex is BadRequest) {
+        final errorData = jsonDecode(ex.error!);
+        final message = errorData['Message'];
         return Failure(
           ConnectionError(
-            errorMessage: ex.error!,
+            errorMessage: message,
             errorModule: 'auth',
             errorMethod: 'validateToken',
           ),
