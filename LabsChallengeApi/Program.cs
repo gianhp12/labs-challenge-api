@@ -7,6 +7,8 @@ using LabsChallengeApi.Src.Shared.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Serilog;
 
+Serilog.Debugging.SelfLog.Enable(msg => Console.Error.WriteLine("SERILOG SELFLOG: " + msg));
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthenticationJwt(builder.Configuration);
@@ -14,7 +16,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddHealthChecks();
 builder.Services.AddCorsConfiguration(builder.Configuration);
-Serilog.Debugging.SelfLog.Enable(msg => Console.Error.WriteLine("SERILOG SELFLOG: " + msg));
 SerilogLoggerFactory.ConfigureSerilog(builder.Configuration, builder.Environment);
 builder.Host.UseSerilog();
 builder.Services.AddSharedModuleServices();
