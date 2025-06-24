@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:labs_challenge_front/src/modules/auth/interactor/repositories/auth_repository.dart';
 import 'package:labs_challenge_front/src/modules/auth/interactor/states/auth_validate_token_state.dart';
 import 'package:labs_challenge_front/src/shared/hooks/state_notifier.dart';
 import 'package:labs_challenge_front/src/shared/states/session_notifier.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthValidateTokenActions extends StateNotifier<AuthValidateTokenState> {
   final AuthRepository _repository;
@@ -33,26 +30,20 @@ class AuthValidateTokenActions extends StateNotifier<AuthValidateTokenState> {
   ) async {
     final session = Modular.get<SessionNotifier>();
     notifySetState((state) => state.setLoading());
-    var result = await _repository.validateToken(email, token);
-    result.fold(
-      (success) async {
-        final loginResult = await _repository.login(email, password);
-        loginResult.fold(
-          (success) async {
-            final loggedUser = success;
-            session.logIn(loggedUser);
-            final prefs = await SharedPreferences.getInstance();
-            prefs.setString('logged_user', jsonEncode(loggedUser.toMap()));
-            notifySetState((state) => state.setSuccessValidateToken());
-          },
-          (failure) {
-            notifySetState((state) => state.setError(failure.errorMessage));
-          },
-        );
-      },
-      (failure) {
-        notifySetState((state) => state.setError(failure.errorMessage));
-      },
-    );
+    final result = await _repository.validateToken(email, token);
+    if (result.isSuccess()) {
+      final loginResult = await _repository.login(email, password);
+      if (loginResult.isSuccess()) {
+        final loggedUser = loginResult.getOrNull()!;
+        session.logIn(loggedUser);
+        notifySetState((state) => state.setSuccessValidateToken());
+      } else {
+        final error = loginResult.exceptionOrNull()!;
+        notifySetState((state) => state.setError(error.errorMessage));
+      }
+    } else {
+      final error = result.exceptionOrNull()!;
+      notifySetState((state) => state.setError(error.errorMessage));
+    }
   }
 }

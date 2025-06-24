@@ -2,24 +2,27 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:labs_challenge_front/src/shared/models/logged_user.dart';
+import 'package:labs_challenge_front/src/shared/services/local_storage/shared_preferences_adapter.dart';
 import 'package:labs_challenge_front/src/shared/states/session_state.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SessionNotifier extends ChangeNotifier {
+  final LocalStorage localStorage;
   SessionState _state = SessionState();
   String? sessionMessage;
   bool? isMessageSuccess;
   SessionState get state => _state;
 
-  void logIn(LoggedUser user) {
+  SessionNotifier({required this.localStorage});
+
+  void logIn(LoggedUser user) async {
     _state = _state.copyWith(loggedUser: user, sessionExpired: false);
     sessionMessage = null;
+    await localStorage.saveString('logged_user', jsonEncode(user.toMap()));
     notifyListeners();
   }
 
   void logOut(String? message, bool isSuccess) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('logged_user');
+    await localStorage.remove('logged_user');
     _state = SessionState();
     sessionMessage = message;
     isMessageSuccess = isSuccess;
@@ -32,8 +35,7 @@ class SessionNotifier extends ChangeNotifier {
   }
 
   Future<void> loadSession() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userJson = prefs.getString('logged_user');
+    final userJson = await localStorage.getString('logged_user');
     if (userJson != null) {
       final userMap = jsonDecode(userJson);
       final user = LoggedUser.fromMap(userMap);
