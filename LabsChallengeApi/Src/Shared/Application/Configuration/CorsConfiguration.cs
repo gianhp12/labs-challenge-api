@@ -8,14 +8,27 @@ public static class CorsConfiguration
         {
             options.AddPolicy("LabsChallengeFront", policy =>
             {
-                policy.WithOrigins(
-                        "http://labs-challenge-front",
-                        "http://localhost:8080"
-                    )
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
+                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+                if (environment == "Development" || environment == "Staging")
+                {
+                    policy
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                }
+                else
+                {
+                    policy
+                        .WithOrigins(
+                            "https://labs-challenge-api.com.br"
+                        )
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                }
             });
         });
+
         return services;
     }
 }
