@@ -174,5 +174,7 @@ Serviços Contidos:
 - Os logs da aplicação podem ser acessados pelo Kibana em: http://localhost:5601
 
 - Ao acessar o Kibana, na seção de criar data views, estará disponivel dois indices de logs:
+
   -emailserviceworker-staging-(ano/mes)
+  
   -labschallengeapi-staging-(ano/mes)
