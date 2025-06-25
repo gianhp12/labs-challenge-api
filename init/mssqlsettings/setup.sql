@@ -1,3 +1,11 @@
+USE [master]
+GO
+CREATE DATABASE [LabsChallengeDb]
+GO
+USE[LabsChallengeDb]
+GO
+CREATE SCHEMA [Access_Control]
+GO
 USE [LabsChallengeDb]
 GO
 CREATE TABLE Access_Control.Users(

@@ -1,0 +1,47 @@
+{
+    "users": [
+        {
+            "name": "guest",
+            "password_hash": "9/1i+jKFRpbTRV1PtRnzFFYibT3cEpP92JeZ8YKGtflf4e/u",
+            "tags": ["administrator"]
+        }
+    ],
+    "permissions":[
+        {
+            "user":"guest",
+            "vhost":"/",
+            "configure":".*",
+            "read":".*",
+            "write":".*"}
+    ],
+    "vhosts": [
+        {
+            "name": "/"
+        }
+    ],
+    "queues": [
+        {
+            "name": "labs-challenge-api-email.confirmation",
+            "vhost": "/",
+            "durable": true
+        }
+    ],
+    "exchanges": [
+        {
+            "name": "labs-challenge-api.exchange",
+            "vhost": "/",
+            "type": "direct",
+            "durable": true
+        }
+    ],
+    "bindings": [
+        {
+            "source": "labs-challenge-api.exchange",
+            "vhost": "/",
+            "destination": "labs-challenge-api-email.confirmation",
+            "destination_type": "queue",
+            "routing_key": "labs-challenge-api-email.confirmation",
+            "arguments": {}
+        }
+    ]
+}

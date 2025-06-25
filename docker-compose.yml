@@ -11,18 +11,11 @@ services:
       sql-server-db:
         condition: service_started
       elasticsearch:
-        condition: service_started
+        condition: service_healthy
       rabbitmq:
-        condition: service_started
-      rabbit-init:
-        condition: service_started
+        condition: service_healthy
     ports:
       - "8081:8081"
-    command: [
-      "/wait-for-it.sh", "sql-server-db:1433",
-      "--", "/wait-for-it.sh", "rabbitmq:5672",
-      "--", "/wait-for-it.sh", "elasticsearch:9200",
-      "--", "dotnet", "LabsChallengeApi.dll" ]
     
   email-service-worker:
     build:
@@ -36,8 +29,6 @@ services:
         condition: service_healthy
       elasticsearch:
         condition: service_healthy
-      rabbit-init:
-        condition: service_started
     restart: unless-stopped
     
   labs-challenge-front:
@@ -50,30 +41,24 @@ services:
     depends_on:
       - labs-challenge-api
 
+  mssqldata:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    entrypoint: /bin/bash
+
   sql-server-db:
     image: mcr.microsoft.com/mssql/server:2019-latest
-    container_name: sql-server-db
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Magazine123
     ports:
-      - "1433:1433"
+      - 1433:1433
     volumes:
-      - ./init/mssqlsettings:/docker-entrypoint-initdb.d:z
-    entrypoint: ["/bin/bash", "-c", "/docker-entrypoint-initdb.d/configure-db.sh & /opt/mssql/bin/sqlservr"]
-    healthcheck:
-      test: [
-        "CMD",
-        "/opt/mssql-tools18/bin/sqlcmd",
-        "-S", "localhost",
-        "-U", "sa",
-        "-P", "Magazine123",
-        "-Q", "SELECT 1"
-      ]
-      interval: 10s       
-      timeout: 10s    
-      retries: 5
-      start_period: 30s
+      - /var/opt/mssql
+      - ./init/mssqlsettings:/usr/src/app 
+    working_dir: /usr/src/app 
+    command: sh -c ' chmod +x ./entrypoint.sh; ./entrypoint.sh & /opt/mssql/bin/sqlservr;'
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: Magazine123
+    volumes_from:
+      - mssqldata
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.18.2
@@ -103,7 +88,8 @@ services:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
       - XPACK_SECURITY_ENABLED=false
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
 
   rabbitmq:
     image: rabbitmq:4.1.1-management
@@ -112,28 +98,19 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbitmq_management load_definitions "/etc/rabbitmq/definitions.json"
     volumes:
+      - ./init/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
       - rabbitmq-data:/var/lib/rabbitmq
     healthcheck:
-      test: ["CMD", "rabbitmqctl", "status"]
-      interval: 10s
-      timeout: 5s
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 10s
       retries: 5
-      start_period: 20s
-
-  rabbit-init:
-    image: curlimages/curl:latest
-    container_name: rabbit_init
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-    entrypoint: ["/bin/sh", "-c", "sh /scripts/configure-queue.sh"]
-    volumes:
-      - ./init/rabbitmq:/scripts
+      start_period: 10s
 
 volumes:
   esdata:
   rabbitmq-data:
   front-volume:
+  mssqldata:
