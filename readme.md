@@ -166,7 +166,7 @@ Serviços Contidos:
 
 **3. Inicie os Serviços com Docker Compose:**
 
-- Agora, suba todos os serviços definidos no arquivo docker-compose.yml. O --build garante que as imagens serão construídas caso não existam ou tenham sido atualizadas:
+ Agora, suba todos os serviços definidos no arquivo docker-compose.yml. O --build garante que as imagens serão construídas caso não existam ou tenham sido atualizadas:
 
 - docker compose up --build
 
