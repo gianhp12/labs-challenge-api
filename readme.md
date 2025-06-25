@@ -150,30 +150,29 @@ Serviços Contidos:
 ---
 
 ### Como executar o projeto:
+
 **1. Clone o Repositório:**
 
 - git clone https://github.com/gianhp12/labs-challenge-api.git
 
-**2. Conceda Permissões aos Scripts:**. 
-
-  No diretório raiz do projeto, execute os comandos abaixo para garantir que os scripts de inicialização possam ser executados:
-
-- chmod +x init/rabbitmq/configure-queue.sh
-
-- chmod +x ./init/api/wait-services-running.sh
-
-- chmod +x ./init/mssqlsettings/configure-db.sh
-
-**3. Inicie os Serviços com Docker Compose:**
+**2. Inicie os Serviços com Docker Compose:**
 
  Agora, suba todos os serviços definidos no arquivo docker-compose.yml. O --build garante que as imagens serão construídas caso não existam ou tenham sido atualizadas:
 
 - docker compose up --build
 
-**4. Acessando a Aplicação**:  
+**3. Acessando a Aplicação**:  
 
  Uma vez que todos os serviços estejam em execução:
 
 - O Frontend da Aplicação estará disponível em: http://localhost:8080
 
-- A Documentação Swagger da API pode ser acessada em: http://localhost:8081/index.html
+- A Documentação Swagger da API pode ser acessada em: http://localhost:8081
+
+**4. Acessando os Logs da Aplicação:**
+
+- Os logs da aplicação podem ser acessados pelo Kibana em: http://localhost:5601
+
+- Ao acessar o Kibana, na seção de criar data views, estará disponivel dois indices de logs:
+  -emailserviceworker-staging-(ano/mes)
+  -labschallengeapi-staging-(ano/mes)
