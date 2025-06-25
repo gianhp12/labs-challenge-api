@@ -1,11 +1,14 @@
 #!/bin/bash
-wait_time=15s
 password=Magazine123
 
-# wait for SQL Server to come up
-echo importing data will start in $wait_time...
-sleep $wait_time
-echo executing script...
+echo "Waiting running SQL..."
 
-# run the init script to create the DB and the tables in /table
+until /opt/mssql-tools18/bin/sqlcmd -S 0.0.0.0 -U sa -P $password -Q "SELECT 1" -C
+do
+  echo "SQL Server is not available. Retrying in 15 seconds..."
+  sleep 15
+done
+
+echo "SQL Server is available! Importing script..."
+
 /opt/mssql-tools18/bin/sqlcmd -S 0.0.0.0 -U sa -P $password -i ./setup.sql -C
