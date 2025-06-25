@@ -74,10 +74,10 @@ services:
       - esdata:/usr/share/elasticsearch/data
     healthcheck:
       test: ["CMD-SHELL", "curl -fs http://localhost:9200/_cluster/health || exit 1"]
-      interval: 10s
-      timeout: 5s
+      interval: 15s
+      timeout: 10s
       retries: 5
-      start_period: 20s
+      start_period: 50s
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.18.2
@@ -107,7 +107,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 10s
+      start_period: 30s
 
 volumes:
   esdata:
