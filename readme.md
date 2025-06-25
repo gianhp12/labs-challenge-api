@@ -38,7 +38,7 @@ O backend é construído com foco em escalabilidade e manutenção, seguindo pri
 
 - Ports and Adapters (Arquitetura Hexagonal): Facilita a comunicação com a infraestrutura externa (ex: banco de dados), permitindo a troca de tecnologias (ex: SQL Server para PostgreSQL) e simplificando os testes (via mocks).
 
-- Middleware Global: Responsável por tratar exceções de forma centralizada e capturar dados para envio ao Serilog (e, por consequência, ao ElasticSearch).
+- Middleware Global: Responsável por tratar exceções de forma centralizada e capturar dados para envio ao Serilog e ElasticSearch.
 
 - Módulos (Bounded Contexts): Cada funcionalidade principal é encapsulada em seu próprio módulo; por exemplo, o AuthModule gerencia todas as operações de autenticação e registro de usuários.
 
@@ -53,6 +53,8 @@ O backend é construído com foco em escalabilidade e manutenção, seguindo pri
 Desenvolvido em Flutter, o frontend também adere a princípios de uma arquitetura limpa:
 
 - Clean Architecture: Organizado para manter a lógica de negócios desacoplada da interface do usuário.
+
+- Separação por Ambiente no Flavor: Configurações específicas para Development, Staging e Production, facilitando o deploy e a gestão.
 
 - Ports and Adapters: Serviços como Http Service e Local Storage são abstraídos, garantindo que a lógica de aplicação não dependa de implementações específicas.
 
@@ -149,23 +151,29 @@ Serviços Contidos:
 
 ### Como executar o projeto:
 **1. Clone o Repositório:**
-git clone https://github.com/gianhp12/labs-challenge-api.git
 
-**2. Conceda Permissões aos Scripts:**
-No diretório raiz do projeto, execute os comandos abaixo para garantir que os scripts de inicialização possam ser executados:
+- git clone https://github.com/gianhp12/labs-challenge-api.git
 
-chmod +x init/rabbitmq/configure-queue.sh
-chmod +x ./init/api/wait-services-running.sh
-chmod +x ./init/mssqlsettings/configure-db.sh
+**2. Conceda Permissões aos Scripts:**. 
+
+  No diretório raiz do projeto, execute os comandos abaixo para garantir que os scripts de inicialização possam ser executados:
+
+- chmod +x init/rabbitmq/configure-queue.sh
+
+- chmod +x ./init/api/wait-services-running.sh
+
+- chmod +x ./init/mssqlsettings/configure-db.sh
 
 **3. Inicie os Serviços com Docker Compose:**
-Agora, suba todos os serviços definidos no arquivo docker-compose.yml. O --build garante que as imagens serão construídas caso não existam ou tenham sido atualizadas:
 
-docker compose up --build
+- Agora, suba todos os serviços definidos no arquivo docker-compose.yml. O --build garante que as imagens serão construídas caso não existam ou tenham sido atualizadas:
 
-**4. Acessando a Aplicação**:
-Uma vez que todos os serviços estejam em execução:
+- docker compose up --build
 
-O Frontend da Aplicação estará disponível em: http://localhost:8080
+**4. Acessando a Aplicação**:  
 
-A Documentação Swagger da API pode ser acessada em: http://localhost:8081/index.html
+ Uma vez que todos os serviços estejam em execução:
+
+- O Frontend da Aplicação estará disponível em: http://localhost:8080
+
+- A Documentação Swagger da API pode ser acessada em: http://localhost:8081/index.html
